@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💧 Recambio Hidro</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root{--verde:#00ff88;--verde2:#00cc66;--oscuro:#0a0f0a;--gris:#1a2a1a;--gris2:#0f1f0f;--warn:#ffcc00;--danger:#ff4444;--text:#c8e6c9;--muted:#4a7a4a;--cyan:#00cccc;--cyan2:#1e5a5a;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--oscuro);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;padding:24px 16px 48px;background-image:radial-gradient(ellipse at 20% 50%,#0d2a0d 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,#0a200a 0%,transparent 50%);}
+  header{text-align:center;margin-bottom:20px;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,9vw,4.5rem);letter-spacing:.12em;color:var(--verde);text-shadow:0 0 30px #00ff8855;line-height:1;}
+  .sub{font-size:.6rem;color:var(--muted);letter-spacing:.3em;text-transform:uppercase;margin-top:4px;}
+
+  #alerta{display:none;max-width:480px;margin:0 auto 20px;background:#1a0000;border:2px solid var(--danger);border-radius:16px;padding:18px 20px;animation:bparp 1.2s ease-in-out infinite;}
+  .al-label{font-size:.55rem;letter-spacing:.3em;color:var(--danger);text-transform:uppercase;margin-bottom:6px;}
+  .al-nombre{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,8vw,3.2rem);color:#fff;letter-spacing:.08em;line-height:1;}
+  .al-sub{font-size:.65rem;color:var(--danger);letter-spacing:.15em;margin-top:4px;text-transform:uppercase;}
+
+  #grid{display:flex;flex-direction:column;gap:10px;max-width:480px;margin:0 auto 16px;}
+
+  .card{border-radius:16px;overflow:hidden;transition:border-color .3s;}
+  .card.ok-card{background:var(--gris);border:1px solid #1e3a1e;}
+  .card.warn-card{background:var(--gris);border:1px solid #665500;}
+  .card.danger-card{background:#1a0000;border:2px solid var(--danger);animation:bparp 1.5s ease-in-out infinite;}
+  .card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;-webkit-user-select:none;}
+  .card-head-left{display:flex;align-items:center;gap:12px;}
+  .card-nombre{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.1em;color:var(--verde);}
+  .card.danger-card .card-nombre{color:#fff;}
+  .card-etapa{font-size:.5rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;background:var(--gris2);padding:2px 7px;border-radius:20px;border:1px solid #1e3a1e;}
+  .card.danger-card .card-etapa{background:#2a0000;border-color:#662222;}
+  .dias-mini{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;min-width:52px;text-align:center;}
+  .dias-mini.ok{color:var(--verde);}
+  .dias-mini.warn{color:var(--warn);}
+  .dias-mini.danger{color:var(--danger);animation:pulso 1s infinite;}
+  .chevron{color:var(--muted);font-size:.65rem;transition:transform .25s;margin-left:6px;}
+  .card.open .chevron{transform:rotate(180deg);}
+  .card-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+  .card.open .card-body{max-height:500px;}
+  .card-body-inner{padding:0 16px 14px;border-top:1px solid #1e3a1e;}
+  .card.danger-card .card-body-inner{border-top-color:#662222;}
+  .dias-big-wrap{display:flex;align-items:center;gap:16px;padding:12px 0 10px;}
+  .dias-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,14vw,5rem);line-height:1;min-width:80px;text-align:center;}
+  .dias-big.ok{color:var(--verde);text-shadow:0 0 30px #00ff8844;}
+  .dias-big.warn{color:var(--warn);text-shadow:0 0 30px #ffcc0044;}
+  .dias-big.danger{color:var(--danger);text-shadow:0 0 40px #ff4444aa;animation:pulso 1s infinite;}
+  .info{flex:1;display:flex;flex-direction:column;gap:6px;}
+  .info-row{display:flex;justify-content:space-between;font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
+  .info-row span{color:var(--text);}
+  .card.danger-card .info-row span{color:#ffaaaa;}
+  .prog-wrap{background:#0f1f0f;border-radius:4px;height:5px;overflow:hidden;margin-top:2px;}
+  .prog-bar.ok{background:linear-gradient(90deg,var(--verde2),var(--verde));}
+  .prog-bar.warn{background:linear-gradient(90deg,#cc9900,var(--warn));}
+  .prog-bar.danger{background:linear-gradient(90deg,#cc2222,var(--danger));}
+  .prog-bar{height:100%;border-radius:4px;transition:width .5s;}
+  .card-acts{display:flex;gap:8px;}
+  .btn-sm{flex:1;padding:7px 4px;background:var(--gris2);border:1px solid #1e3a1e;border-radius:8px;color:var(--muted);font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+  .card.danger-card .btn-sm{background:#2a0000;border-color:#442222;}
+  .btn-sm.primary{background:var(--verde2);color:#0a0f0a;border-color:var(--verde2);}
+  .card.danger-card .btn-sm.primary{background:var(--danger);color:#fff;border-color:var(--danger);}
+  .btn-sm.red{border-color:#662222;color:var(--danger);}
+
+  .card.ph-card{background:var(--gris);border:1px solid var(--cyan2);}
+  .card.ph-card.warn-card{border-color:#665500;}
+  .card.ph-card.danger-card{background:#001a1a;border:2px solid var(--cyan);animation:bparp-cyan 1.5s ease-in-out infinite;}
+  .card.ph-card .card-nombre{color:var(--cyan);}
+  .card.ph-card .card-etapa{border-color:var(--cyan2);color:#008888;}
+  .card.ph-card .card-body-inner{border-top-color:var(--cyan2);}
+  .dias-mini.cyan{color:var(--cyan);}
+  .dias-big.cyan{color:var(--cyan);text-shadow:0 0 30px #00cccc44;}
+  .prog-bar.cyan{background:linear-gradient(90deg,#009999,var(--cyan));}
+  .btn-sm.cyan-primary{background:var(--cyan);color:#0a0f0a;border-color:var(--cyan);}
+
+  .bottom{display:flex;gap:10px;max-width:480px;margin:0 auto;flex-wrap:wrap;}
+  .btn-dash{flex:1;padding:14px;background:transparent;border:1px dashed #1e3a1e;border-radius:16px;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.15em;cursor:pointer;}
+  .btn-back{padding:14px 18px;background:transparent;border:1px solid #1e3a1e;border-radius:16px;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.1em;cursor:pointer;white-space:nowrap;}
+  .btn-ph-main{padding:14px 18px;background:transparent;border:1px solid var(--cyan2);border-radius:16px;color:var(--cyan);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.1em;cursor:pointer;white-space:nowrap;}
+
+  .overlay{display:none;position:fixed;inset:0;background:#00000099;backdrop-filter:blur(4px);z-index:100;align-items:flex-end;justify-content:center;}
+  .overlay.open{display:flex;}
+  .modal{background:#111f11;border:1px solid #1e3a1e;border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideup .25s ease;}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--verde);margin-bottom:20px;}
+  .modal-title.cyan{color:var(--cyan);}
+  .fg{margin-bottom:14px;}
+  label{display:block;font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+  input,select{width:100%;background:var(--gris2);border:1px solid #1e3a1e;border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;padding:10px 14px;outline:none;-webkit-appearance:none;appearance:none;box-sizing:border-box;}
+  input:focus,select:focus{border-color:var(--verde2);}
+  input[type="date"]::-webkit-calendar-picker-indicator{filter:invert(.4) sepia(1) saturate(3) hue-rotate(80deg);}
+  input[type="file"]{padding:8px;font-size:.75rem;color:var(--muted);}
+  select option{background:#111f11;}
+  .modal-btns{display:flex;gap:10px;margin-top:20px;}
+  .btn-ok{flex:1;padding:13px;border-radius:8px;border:none;background:var(--verde2);color:#0a0f0a;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
+  .btn-ok.cyan{background:var(--cyan);color:#0a0f0a;}
+  .btn-cancel{flex:1;padding:13px;border-radius:8px;border:1px solid #1e3a1e;background:var(--gris2);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
+  .backup-info{font-size:.62rem;color:var(--muted);line-height:1.8;margin-bottom:14px;}
+  .backup-info b{color:var(--verde2);}
+
+  #pin-screen{display:none;position:fixed;inset:0;background:var(--oscuro);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:28px;background-image:radial-gradient(ellipse at 50% 40%,#0d2a0d 0%,transparent 70%);}
+  #pin-screen.visible{display:flex;}
+  .pin-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,8vw,3.2rem);letter-spacing:.15em;color:var(--verde);text-shadow:0 0 30px #00ff8855;text-align:center;}
+  .pin-sub{font-size:.55rem;letter-spacing:.3em;color:var(--muted);text-transform:uppercase;text-align:center;margin-top:-20px;}
+  .pin-dots{display:flex;gap:16px;justify-content:center;}
+  .pin-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--muted);background:transparent;transition:background .15s,border-color .15s;}
+  .pin-dot.filled{background:var(--verde);border-color:var(--verde);box-shadow:0 0 10px #00ff8866;}
+  .pin-dot.error{background:var(--danger);border-color:var(--danger);}
+  .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;max-width:300px;}
+  .pin-btn{padding:18px;background:var(--gris);border:1px solid #1e3a1e;border-radius:14px;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;cursor:pointer;transition:background .1s,transform .08s;text-align:center;-webkit-tap-highlight-color:transparent;}
+  .pin-btn:active{background:#2a4a2a;transform:scale(.94);}
+  .pin-btn.del{font-size:1.1rem;color:var(--muted);}
+  .pin-btn.empty{background:transparent;border:none;pointer-events:none;}
+  .pin-error-msg{font-size:.6rem;letter-spacing:.25em;color:var(--danger);text-transform:uppercase;min-height:1em;text-align:center;}
+
+  #ov-pin .modal{border-color:#2a2a5a;}
+  .pin-modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:#8888ff;margin-bottom:16px;}
+  .pin-cstep{display:none;animation:fadein .25s ease;}
+  .pin-cstep.active{display:block;}
+  .pin-cstep-label{font-size:.52rem;letter-spacing:.3em;color:#5555aa;text-transform:uppercase;margin-bottom:14px;}
+  .mini-dots{display:flex;gap:10px;justify-content:center;margin:12px 0;min-height:34px;align-items:center;}
+  .mini-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted);background:transparent;transition:background .15s;}
+  .mini-dot.filled{background:#8888ff;border-color:#8888ff;}
+  .mini-dot.error{background:var(--danger);border-color:var(--danger);}
+  .mini-pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;margin-bottom:10px;}
+  .mini-pin-btn{padding:14px;background:var(--gris2);border:1px solid #2a2a5a;border-radius:12px;color:var(--text);font-family:'Bebas Neue',sans-serif;font-size:1.4rem;cursor:pointer;text-align:center;transition:background .1s;-webkit-tap-highlight-color:transparent;}
+  .mini-pin-btn:active{background:#2a2a4a;}
+  .mini-pin-btn.del{font-size:.9rem;color:var(--muted);}
+  .mini-pin-btn.empty{background:transparent;border:none;pointer-events:none;}
+  .pin-err{font-size:.6rem;letter-spacing:.2em;color:var(--danger);text-transform:uppercase;min-height:1em;text-align:center;margin-bottom:6px;}
+  .btn-ok-pin{flex:1;padding:13px;border-radius:8px;border:none;background:#6666cc;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
+
+  @keyframes pulso{0%,100%{opacity:1}50%{opacity:.45}}
+  @keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @keyframes bparp{0%,100%{border-color:var(--danger)}50%{border-color:#ff000033}}
+  @keyframes bparp-cyan{0%,100%{border-color:var(--cyan)}50%{border-color:#00cccc22}}
+  @keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  .shake{animation:shake .35s ease;}
+</style>
+</head>
+<body>
+
+<!-- PIN LOCK -->
+<div id="pin-screen">
+  <div>
+    <div class="pin-title">💧 RECAMBIO</div>
+    <div class="pin-sub">Ingresá tu PIN para continuar</div>
+  </div>
+  <div class="pin-dots" id="lock-dots"></div>
+  <div class="pin-error-msg" id="lock-err"></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="lockKey('1')">1</button>
+    <button class="pin-btn" onclick="lockKey('2')">2</button>
+    <button class="pin-btn" onclick="lockKey('3')">3</button>
+    <button class="pin-btn" onclick="lockKey('4')">4</button>
+    <button class="pin-btn" onclick="lockKey('5')">5</button>
+    <button class="pin-btn" onclick="lockKey('6')">6</button>
+    <button class="pin-btn" onclick="lockKey('7')">7</button>
+    <button class="pin-btn" onclick="lockKey('8')">8</button>
+    <button class="pin-btn" onclick="lockKey('9')">9</button>
+    <div class="pin-btn empty"></div>
+    <button class="pin-btn" onclick="lockKey('0')">0</button>
+    <button class="pin-btn del" onclick="lockDel()">⌫</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <header>
+    <h1>💧 RECAMBIO</h1>
+    <p class="sub">Gestión de sistemas · Hidro</p>
+  </header>
+  <div id="alerta">
+    <div class="al-label">⚠ RECAMBIO URGENTE</div>
+    <div class="al-nombre" id="al-nombre"></div>
+    <div class="al-sub" id="al-sub"></div>
+  </div>
+  <div id="grid"></div>
+  <div class="bottom">
+    <button class="btn-dash" onclick="abrirModal()">+ AGREGAR SISTEMA</button>
+    <button class="btn-ph-main" onclick="abrirPH()">🔬 pH</button>
+    <button class="btn-back" onclick="abrirBackup()">💾</button>
+  </div>
+  <div style="max-width:480px;margin:12px auto 0;">
+    <button onclick="salirYBackup()" style="width:100%;padding:16px;background:transparent;border:1px solid #ff4444;border-radius:16px;color:#ff4444;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.2em;cursor:pointer;">CERRAR Y GUARDAR BACKUP</button>
+  </div>
+</div>
+
+<!-- MODAL: SISTEMA -->
+<div class="overlay" id="ov-s">
+  <div class="modal">
+    <div class="modal-title" id="m-title">Nuevo Sistema</div>
+    <div class="fg"><label>Nombre</label><input type="text" id="m-nombre" maxlength="30" placeholder="Ej: Recirculante A…"></div>
+    <div class="fg"><label>Etapa</label>
+      <select id="m-etapa">
+        <option value="Vegetativa">🌿 Vegetativa</option>
+        <option value="Flora">🌸 Flora</option>
+        <option value="Vejez">🍂 Vejez / Maduración</option>
+        <option value="Germinación">🌱 Germinación</option>
+      </select>
+    </div>
+    <div class="fg"><label>Fecha del último recambio</label><input type="date" id="m-fecha"></div>
+    <div class="fg"><label>Días hasta el próximo recambio</label><input type="number" id="m-dias" min="1" max="60" placeholder="Ej: 7"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-s')">CANCELAR</button>
+      <button class="btn-ok" onclick="guardar()">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: pH -->
+<div class="overlay" id="ov-ph">
+  <div class="modal">
+    <div class="modal-title cyan">🔬 Calibración pH</div>
+    <div class="fg"><label>Fecha de la última calibración</label><input type="date" id="ph-fecha"></div>
+    <div class="fg"><label>Días hasta la próxima calibración</label><input type="number" id="ph-dias" min="1" max="365" placeholder="Ej: 30"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-ph')">CANCELAR</button>
+      <button class="btn-ok cyan" onclick="guardarPH()">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: BACKUP -->
+<div class="overlay" id="ov-b">
+  <div class="modal">
+    <div class="modal-title">💾 Backup</div>
+    <div id="ab-info" style="background:#0f1f0f;border:1px solid #1e3a1e;border-radius:10px;padding:12px 14px;margin-bottom:12px;">
+      <div style="font-size:.5rem;letter-spacing:.25em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;">⚡ Auto-backup</div>
+      <div id="ab-ts" style="font-size:.72rem;color:var(--verde2);letter-spacing:.05em;">—</div>
+      <button class="btn-ok" id="ab-dl-btn" style="width:100%;margin-top:10px;background:#1a3a1a;color:var(--verde);border:1px solid var(--verde2);" onclick="descargarAutoBackup()">⬇ DESCARGAR AUTO-BACKUP</button>
+    </div>
+    <p class="backup-info">
+      <b>EXPORTAR</b> — descarga un archivo <b>.json</b> con todos tus sistemas.<br>
+      <b>IMPORTAR</b> — seleccioná ese archivo para restaurar los datos.
+    </p>
+    <button class="btn-ok" style="width:100%;margin-bottom:16px" onclick="exportar()">⬇ EXPORTAR JSON</button>
+    <div class="fg">
+      <label>Importar archivo JSON</label>
+      <input type="file" id="bk-file" accept=".json">
+    </div>
+    <div class="fg" style="border-top:1px solid #1e3a1e;padding-top:14px;margin-top:4px;">
+      <label style="color:#8888ff">🔐 Seguridad</label>
+      <button class="btn-ok" style="width:100%;background:#6666cc;border:none;margin-top:8px;" onclick="cerrar('ov-b');abrirCambiarPIN()">🔑 CAMBIAR PIN</button>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-b')">CERRAR</button>
+      <button class="btn-ok" onclick="importar()">⬆ IMPORTAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CAMBIAR PIN -->
+<div class="overlay" id="ov-pin">
+  <div class="modal">
+    <div class="pin-modal-title">🔐 CAMBIAR PIN</div>
+    <div class="pin-cstep active" id="pcs-a">
+      <div class="pin-cstep-label">Verificá tu PIN actual</div>
+      <div class="mini-dots" id="mda"></div>
+      <div class="pin-err" id="err-a"></div>
+      <div class="mini-pin-pad">
+        <button class="mini-pin-btn" onclick="cpKey('a','1')">1</button><button class="mini-pin-btn" onclick="cpKey('a','2')">2</button><button class="mini-pin-btn" onclick="cpKey('a','3')">3</button>
+        <button class="mini-pin-btn" onclick="cpKey('a','4')">4</button><button class="mini-pin-btn" onclick="cpKey('a','5')">5</button><button class="mini-pin-btn" onclick="cpKey('a','6')">6</button>
+        <button class="mini-pin-btn" onclick="cpKey('a','7')">7</button><button class="mini-pin-btn" onclick="cpKey('a','8')">8</button><button class="mini-pin-btn" onclick="cpKey('a','9')">9</button>
+        <div class="mini-pin-btn empty"></div><button class="mini-pin-btn" onclick="cpKey('a','0')">0</button><button class="mini-pin-btn del" onclick="cpDel('a')">⌫</button>
+      </div>
+      <div class="modal-btns"><button class="btn-cancel" onclick="cerrar('ov-pin')">CANCELAR</button></div>
+    </div>
+    <div class="pin-cstep" id="pcs-b">
+      <div class="pin-cstep-label">Nuevo PIN (3–6 dígitos)</div>
+      <div class="mini-dots" id="mdb"></div>
+      <div class="pin-err" id="err-b"></div>
+      <div class="mini-pin-pad">
+        <button class="mini-pin-btn" onclick="cpKey('b','1')">1</button><button class="mini-pin-btn" onclick="cpKey('b','2')">2</button><button class="mini-pin-btn" onclick="cpKey('b','3')">3</button>
+        <button class="mini-pin-btn" onclick="cpKey('b','4')">4</button><button class="mini-pin-btn" onclick="cpKey('b','5')">5</button><button class="mini-pin-btn" onclick="cpKey('b','6')">6</button>
+        <button class="mini-pin-btn" onclick="cpKey('b','7')">7</button><button class="mini-pin-btn" onclick="cpKey('b','8')">8</button><button class="mini-pin-btn" onclick="cpKey('b','9')">9</button>
+        <div class="mini-pin-btn empty"></div><button class="mini-pin-btn" onclick="cpKey('b','0')">0</button><button class="mini-pin-btn del" onclick="cpDel('b')">⌫</button>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="cpGo('a')">← ATRÁS</button>
+        <button class="btn-ok-pin" onclick="cpNext()">SIGUIENTE →</button>
+      </div>
+    </div>
+    <div class="pin-cstep" id="pcs-c">
+      <div class="pin-cstep-label">Repetí el nuevo PIN</div>
+      <div class="mini-dots" id="mdc"></div>
+      <div class="pin-err" id="err-c"></div>
+      <div class="mini-pin-pad">
+        <button class="mini-pin-btn" onclick="cpKey('c','1')">1</button><button class="mini-pin-btn" onclick="cpKey('c','2')">2</button><button class="mini-pin-btn" onclick="cpKey('c','3')">3</button>
+        <button class="mini-pin-btn" onclick="cpKey('c','4')">4</button><button class="mini-pin-btn" onclick="cpKey('c','5')">5</button><button class="mini-pin-btn" onclick="cpKey('c','6')">6</button>
+        <button class="mini-pin-btn" onclick="cpKey('c','7')">7</button><button class="mini-pin-btn" onclick="cpKey('c','8')">8</button><button class="mini-pin-btn" onclick="cpKey('c','9')">9</button>
+        <div class="mini-pin-btn empty"></div><button class="mini-pin-btn" onclick="cpKey('c','0')">0</button><button class="mini-pin-btn del" onclick="cpDel('c')">⌫</button>
+      </div>
+      <div class="modal-btns">
+        <button class="btn-cancel" onclick="cpGo('b')">← ATRÁS</button>
+        <button class="btn-ok-pin" onclick="cpGuardar()">✓ GUARDAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const KEY='recambio_v5', KEY_PIN='recambio_pin', KEY_PH='recambio_ph', KEY_AB='recambio_autobackup';
+const DEFAULT_PIN='779';
+const EMOJIS={Vegetativa:'🌿',Flora:'🌸',Vejez:'🍂','Germinación':'🌱'};
+let SS=[], editId=null, openIds=new Set();
+let PH=null;
+
+function load(){
+  try{SS=JSON.parse(localStorage.getItem(KEY))||[];}catch{SS=[];}
+  try{PH=JSON.parse(localStorage.getItem(KEY_PH))||null;}catch{PH=null;}
+}
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(SS));
+  // ✅ FIX: solo sobreescribe el auto-backup si hay datos reales
+  if(SS.length>0||PH){autoBackup();}
+}
+function savePH(){
+  localStorage.setItem(KEY_PH,JSON.stringify(PH));
+  if(SS.length>0||PH){autoBackup();}
+}
+function autoBackup(){
+  const snap={ss:SS,ph:PH,ts:new Date().toISOString()};
+  localStorage.setItem(KEY_AB,JSON.stringify(snap));
+}
+function getAutoBackup(){try{return JSON.parse(localStorage.getItem(KEY_AB))||null;}catch{return null;}}
+function fmtTS(iso){if(!iso)return'—';const d=new Date(iso);const pad=n=>String(n).padStart(2,'0');return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes());}
+function descargarAutoBackup(){
+  const ab=getAutoBackup();
+  if(!ab){alert('Sin auto-backup todavía.');return;}
+  // ✅ FIX: advertir si el backup está vacío
+  if((!ab.ss||ab.ss.length===0)&&!ab.ph){
+    if(!confirm('⚠️ El auto-backup está vacío. ¿Descargarlo igual?'))return;
+  }
+  const blob=new Blob([JSON.stringify({ss:ab.ss,ph:ab.ph},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  const fecha=ab.ts?ab.ts.slice(0,10).replaceAll('-',''):'';
+  a.href=url;a.download='recambio_hidro_backup_'+fecha+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function hoy(){return new Date().toISOString().split('T')[0];}
+function sumar(ds,n){const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
+function dif(a,b){return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000);}
+function fmtF(ds){if(!ds)return'—';const[y,m,d]=ds.split('-');return d+'/'+m+'/'+y;}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+function rest(s){return dif(hoy(),sumar(s.fecha,s.dias));}
+function getPin(){return localStorage.getItem(KEY_PIN)||DEFAULT_PIN;}
+function setPin(p){localStorage.setItem(KEY_PIN,p);}
+
+/* ── PIN LOCK ── */
+let lockInput='';
+function buildLockDots(){
+  const cont=document.getElementById('lock-dots');
+  cont.innerHTML='';
+  for(let i=0;i<getPin().length;i++){
+    const d=document.createElement('div');d.className='pin-dot';cont.appendChild(d);
+  }
+}
+function renderLockDots(){
+  [...document.getElementById('lock-dots').children].forEach((d,i)=>{
+    d.classList.toggle('filled',i<lockInput.length);d.classList.remove('error');
+  });
+}
+function lockKey(digit){
+  const pin=getPin();
+  if(lockInput.length>=pin.length)return;
+  lockInput+=digit;renderLockDots();
+  if(lockInput.length===pin.length){
+    if(lockInput===pin)setTimeout(unlockApp,120);
+    else lockFail();
+  }
+}
+function lockDel(){lockInput=lockInput.slice(0,-1);renderLockDots();document.getElementById('lock-err').textContent='';}
+function lockFail(){
+  const cont=document.getElementById('lock-dots');
+  [...cont.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});
+  document.getElementById('lock-err').textContent='PIN incorrecto';
+  cont.classList.add('shake');
+  setTimeout(()=>{cont.classList.remove('shake');[...cont.children].forEach(d=>d.classList.remove('error'));lockInput='';document.getElementById('lock-err').textContent='';renderLockDots();},650);
+}
+function unlockApp(){document.getElementById('pin-screen').classList.remove('visible');document.getElementById('app').style.display='block';lockInput='';}
+
+/* ── CAMBIAR PIN ── */
+let cpA='',cpB='',cpC='';
+function abrirCambiarPIN(){
+  cpA='';cpB='';cpC='';
+  ['a','b','c'].forEach(x=>{document.getElementById('err-'+x).textContent='';});
+  cpGo('a');renderMD('a');renderMD('b');renderMD('c');
+  document.getElementById('ov-pin').classList.add('open');
+}
+function cpGo(s){
+  ['a','b','c'].forEach(x=>document.getElementById('pcs-'+x).className='pin-cstep'+(x===s?' active':''));
+}
+function renderMD(s){
+  const val=s==='a'?cpA:s==='b'?cpB:cpC;
+  const pin=getPin();
+  const total=s==='a'?pin.length:Math.max(val.length,3);
+  const cont=document.getElementById('md'+s);
+  cont.innerHTML='';
+  for(let i=0;i<total;i++){const d=document.createElement('div');d.className='mini-dot'+(i<val.length?' filled':'');cont.appendChild(d);}
+}
+function cpKey(s,digit){
+  const pin=getPin();
+  if(s==='a'){if(cpA.length>=pin.length)return;cpA+=digit;renderMD('a');if(cpA.length===pin.length){if(cpA===pin){document.getElementById('err-a').textContent='';setTimeout(()=>{cpB='';renderMD('b');cpGo('b');},150);}else{document.getElementById('err-a').textContent='PIN incorrecto';const c=document.getElementById('mda');c.classList.add('shake');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));cpA='';renderMD('a');},650);}}}
+  if(s==='b'){if(cpB.length>=6)return;cpB+=digit;renderMD('b');}
+  if(s==='c'){if(cpC.length>=6)return;cpC+=digit;renderMD('c');}
+}
+function cpDel(s){
+  if(s==='a'){cpA=cpA.slice(0,-1);renderMD('a');document.getElementById('err-a').textContent='';}
+  if(s==='b'){cpB=cpB.slice(0,-1);renderMD('b');document.getElementById('err-b').textContent='';}
+  if(s==='c'){cpC=cpC.slice(0,-1);renderMD('c');document.getElementById('err-c').textContent='';}
+}
+function cpNext(){
+  if(cpB.length<3){document.getElementById('err-b').textContent='Mínimo 3 dígitos';return;}
+  document.getElementById('err-b').textContent='';cpC='';renderMD('c');cpGo('c');
+}
+function cpGuardar(){
+  if(cpC.length<3){document.getElementById('err-c').textContent='Mínimo 3 dígitos';return;}
+  if(cpC!==cpB){
+    document.getElementById('err-c').textContent='Los PINs no coinciden';
+    const c=document.getElementById('mdc');c.classList.add('shake');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});
+    setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));cpC='';renderMD('c');},650);
+    return;
+  }
+  setPin(cpB);buildLockDots();renderLockDots();cerrar('ov-pin');alert('✅ PIN actualizado correctamente.');
+}
+
+/* ── pH ── */
+function abrirPH(){
+  document.getElementById('ph-fecha').value=PH?PH.fecha:hoy();
+  document.getElementById('ph-dias').value=PH?PH.dias:'';
+  document.getElementById('ov-ph').classList.add('open');
+}
+function guardarPH(){
+  const fecha=document.getElementById('ph-fecha').value;
+  const dias=parseInt(document.getElementById('ph-dias').value);
+  if(!fecha||!dias||dias<1){alert('Completá los dos campos.');return;}
+  PH={fecha,dias};savePH();cerrar('ov-ph');render();
+}
+
+/* ── SISTEMA MODAL ── */
+function abrirModal(id=null){
+  editId=id;const s=id?SS.find(x=>x.id===id):null;
+  document.getElementById('m-title').textContent=id?'Editar Sistema':'Nuevo Sistema';
+  document.getElementById('m-nombre').value=s?s.nombre:'';
+  document.getElementById('m-etapa').value=s?s.etapa:'Flora';
+  document.getElementById('m-fecha').value=s?s.fecha:hoy();
+  document.getElementById('m-dias').value=s?s.dias:'';
+  document.getElementById('ov-s').classList.add('open');
+}
+function abrirBackup(){
+  const ab=getAutoBackup();
+  document.getElementById('ab-ts').textContent=ab?'Último: '+fmtTS(ab.ts):'Sin datos aún — guardá algo primero';
+  document.getElementById('ab-dl-btn').disabled=!ab;
+  document.getElementById('ov-b').classList.add('open');
+}
+function cerrar(id){document.getElementById(id).classList.remove('open');editId=null;}
+function guardar(){
+  const nombre=document.getElementById('m-nombre').value.trim();
+  const etapa=document.getElementById('m-etapa').value;
+  const fecha=document.getElementById('m-fecha').value;
+  const dias=parseInt(document.getElementById('m-dias').value);
+  if(!nombre||!fecha||!dias||dias<1){alert('Completá todos los campos.');return;}
+  if(editId){const i=SS.findIndex(x=>x.id===editId);if(i!==-1)SS[i]={...SS[i],nombre,etapa,fecha,dias};}
+  else SS.push({id:uid(),nombre,etapa,fecha,dias});
+  save();cerrar('ov-s');render();
+}
+function eliminar(id,e){e.stopPropagation();if(!confirm('¿Eliminás este sistema?'))return;SS=SS.filter(x=>x.id!==id);openIds.delete(id);save();render();}
+function recambioHoy(id,e){e.stopPropagation();const i=SS.findIndex(x=>x.id===id);if(i!==-1){SS[i].fecha=hoy();save();render();}}
+function editarCard(id,e){e.stopPropagation();abrirModal(id);}
+function calibreHoy(e){e.stopPropagation();if(PH){PH.fecha=hoy();savePH();render();}}
+function editarPH(e){e.stopPropagation();abrirPH();}
+
+/* ── BACKUP ── */
+function exportar(){
+  // ✅ FIX: exportar en el mismo formato que el auto-backup {ss, ph}
+  const data={ss:SS,ph:PH};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='recambio_backup_'+hoy().replaceAll('-','')+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function importar(){
+  const file=document.getElementById('bk-file').files[0];
+  if(!file){alert('Seleccioná un archivo .json primero.');return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const data=JSON.parse(e.target.result);
+      let nuevosSS=[], nuevoPH=null;
+
+      // ✅ FIX: acepta tanto array [] como objeto {ss, ph}
+      if(Array.isArray(data)){
+        // Formato viejo: solo array de sistemas
+        nuevosSS=data;
+      } else if(data && Array.isArray(data.ss)){
+        // Formato nuevo: {ss: [...], ph: {...}}
+        nuevosSS=data.ss;
+        if(data.ph && data.ph.fecha && data.ph.dias) nuevoPH=data.ph;
+      } else {
+        throw new Error('Formato no reconocido');
+      }
+
+      if(!confirm('¿Reemplazás todos los datos con el backup?\n\nSistemas encontrados: '+nuevosSS.length+(nuevoPH?'\nCalibración pH: ✓':'')))return;
+      SS=nuevosSS;
+      PH=nuevoPH;
+      localStorage.setItem(KEY,JSON.stringify(SS));
+      if(PH) localStorage.setItem(KEY_PH,JSON.stringify(PH));
+      autoBackup();
+      cerrar('ov-b');
+      render();
+      alert('✅ Backup importado correctamente.\n'+nuevosSS.length+' sistemas cargados.');
+    }catch(err){
+      alert('❌ Archivo inválido. Asegurate de usar un backup generado por esta app.');
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ── RENDER ── */
+function render(){
+  const grid=document.getElementById('grid');
+  const alerta=document.getElementById('alerta');
+  const urgentes=SS.filter(s=>rest(s)<=1);
+  const phRest=PH?dif(hoy(),sumar(PH.fecha,PH.dias)):null;
+  const phUrgente=phRest!==null&&phRest<=1;
+
+  if(urgentes.length||phUrgente){
+    alerta.style.display='block';
+    const nombres=[...urgentes.map(s=>s.nombre),...(phUrgente?['pH MEDIDOR']:[])];
+    document.getElementById('al-nombre').textContent=nombres.join(' · ');
+    if(nombres.length===1&&urgentes.length===1){
+      const r=rest(urgentes[0]);
+      document.getElementById('al-sub').textContent=r<=0?(r===0?'¡RECAMBIO HOY!':`VENCIDO hace ${Math.abs(r)} día${Math.abs(r)>1?'s':''}`):'⏰ MAÑANA ES EL RECAMBIO';
+    }else if(nombres.length===1&&phUrgente){
+      document.getElementById('al-sub').textContent=phRest<=0?'¡CALIBRAR HOY!':'⏰ CALIBRAR MAÑANA';
+    }else{
+      document.getElementById('al-sub').textContent=nombres.length+' ÍTEMS REQUIEREN ATENCIÓN';
+    }
+  }else{alerta.style.display='none';}
+
+  if(!SS.length&&!PH){
+    grid.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.7rem;letter-spacing:.2em;padding:32px 0">SIN SISTEMAS · AGREGÁ UNO</div>';
+    return;
+  }
+
+  const items=[];
+  SS.forEach(s=>items.push({tipo:'sistema',data:s,r:rest(s)}));
+  if(PH) items.push({tipo:'ph',data:PH,r:phRest});
+  items.sort((a,b)=>a.r-b.r);
+
+  grid.innerHTML=items.map(item=>{
+    if(item.tipo==='ph'){
+      const r=item.r;
+      const isUrgente=r<=1;
+      const isOpen=isUrgente?!openIds.has('closed_ph'):openIds.has('ph');
+      const prox=sumar(PH.fecha,PH.dias);
+      const trans=dif(PH.fecha,hoy());
+      const pct=Math.min(100,Math.max(0,(trans/PH.dias)*100));
+      const dc=r<=1?'danger':r<=2?'warn':'cyan';
+      const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
+      const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)):String(r);
+      const diasMini=r<=0?(r===0?'HOY':'+'+Math.abs(r)+'d'):(r+'d');
+      return`<div class="card ph-card ${cardCls}${isOpen?' open':''}" id="card-ph">
+        <div class="card-head" onclick="togglePH(${isUrgente})">
+          <div class="card-head-left">
+            <div class="dias-mini ${dc}">${diasMini}</div>
+            <div><div class="card-nombre">🔬 CALIBRACIÓN pH</div><div class="card-etapa">Medidor Milwaukee</div></div>
+          </div>
+          <div class="chevron">▼</div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="dias-big-wrap">
+            <div class="dias-big ${dc}">${diasTxt}</div>
+            <div class="info">
+              <div class="info-row">Última calibración <span>${fmtF(PH.fecha)}</span></div>
+              <div class="info-row">Próxima <span>${fmtF(prox)}</span></div>
+              <div class="info-row">Ciclo <span>${PH.dias} días</span></div>
+              <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
+            </div>
+          </div>
+          <div class="card-acts">
+            <button class="btn-sm cyan-primary" onclick="calibreHoy(event)">✓ Calibré hoy</button>
+            <button class="btn-sm" onclick="editarPH(event)">✎ Editar</button>
+          </div>
+        </div></div>
+      </div>`;
+    } else {
+      const s=item.data;
+      const r=item.r;
+      const isUrgente=r<=1;
+      const isOpen=isUrgente?!openIds.has('closed_'+s.id):openIds.has(s.id);
+      const prox=sumar(s.fecha,s.dias);
+      const trans=dif(s.fecha,hoy());
+      const pct=Math.min(100,Math.max(0,(trans/s.dias)*100));
+      const dc=r<=1?'danger':r<=2?'warn':'ok';
+      const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
+      const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)):String(r);
+      const diasMini=r<=0?(r===0?'HOY':'+'+Math.abs(r)+'d'):(r+'d');
+      return`<div class="card ${cardCls}${isOpen?' open':''}" id="card-${s.id}">
+        <div class="card-head" onclick="toggleCard2('${s.id}',${isUrgente})">
+          <div class="card-head-left">
+            <div class="dias-mini ${dc}">${diasMini}</div>
+            <div><div class="card-nombre">${s.nombre}</div><div class="card-etapa">${EMOJIS[s.etapa]||''} ${s.etapa}</div></div>
+          </div>
+          <div class="chevron">▼</div>
+        </div>
+        <div class="card-body"><div class="card-body-inner">
+          <div class="dias-big-wrap">
+            <div class="dias-big ${dc}">${diasTxt}</div>
+            <div class="info">
+              <div class="info-row">Último recambio <span>${fmtF(s.fecha)}</span></div>
+              <div class="info-row">Próximo <span>${fmtF(prox)}</span></div>
+              <div class="info-row">Ciclo <span>${s.dias} días</span></div>
+              <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
+            </div>
+          </div>
+          <div class="card-acts">
+            <button class="btn-sm primary" onclick="recambioHoy('${s.id}',event)">✓ Recambié hoy</button>
+            <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Editar</button>
+            <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>
+          </div>
+        </div></div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function toggleCard2(id,isUrgente){
+  if(isUrgente){const ck='closed_'+id;if(openIds.has(ck))openIds.delete(ck);else openIds.add(ck);}
+  else{if(openIds.has(id))openIds.delete(id);else openIds.add(id);}
+  render();
+}
+function togglePH(isUrgente){
+  if(isUrgente){if(openIds.has('closed_ph'))openIds.delete('closed_ph');else openIds.add('closed_ph');}
+  else{if(openIds.has('ph'))openIds.delete('ph');else openIds.add('ph');}
+  render();
+}
+
+document.querySelectorAll('.overlay').forEach(ov=>{
+  ov.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+});
+
+function salirYBackup(){
+  // ✅ FIX: solo descargar si hay datos
+  if((!SS||SS.length===0)&&!PH){
+    alert('⚠️ No hay datos para guardar.');
+    return;
+  }
+  descargarAutoBackup();
+  setTimeout(()=>window.close(),400);
+}
+
+load();
+buildLockDots();
+document.getElementById('pin-screen').classList.add('visible');
+render();
+</script>
+</body>
+</html>
