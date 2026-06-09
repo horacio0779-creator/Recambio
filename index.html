@@ -6,7 +6,7 @@
 <title>💧 Recambio Hidro</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  :root{--verde:#00ff88;--verde2:#00cc66;--oscuro:#0a0f0a;--gris:#1a2a1a;--gris2:#0f1f0f;--warn:#ffcc00;--danger:#ff4444;--text:#c8e6c9;--muted:#4a7a4a;--cyan:#00cccc;--cyan2:#1e5a5a;}
+  :root{--verde:#00ff88;--verde2:#00cc66;--oscuro:#0a0f0a;--gris:#1a2a1a;--gris2:#0f1f0f;--warn:#ffcc00;--danger:#ff4444;--text:#c8e6c9;--muted:#4a7a4a;--cyan:#00cccc;--cyan2:#1e5a5a;--lav:#ffaa00;--lav2:#cc7700;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--oscuro);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;padding:24px 16px 48px;background-image:radial-gradient(ellipse at 20% 50%,#0d2a0d 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,#0a200a 0%,transparent 50%);}
   header{text-align:center;margin-bottom:20px;}
@@ -36,8 +36,8 @@
   .dias-mini.danger{color:var(--danger);animation:pulso 1s infinite;}
   .chevron{color:var(--muted);font-size:.65rem;transition:transform .25s;margin-left:6px;}
   .card.open .chevron{transform:rotate(180deg);}
-  .card-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
-  .card.open .card-body{max-height:500px;}
+  .card-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+  .card.open .card-body{max-height:700px;}
   .card-body-inner{padding:0 16px 14px;border-top:1px solid #1e3a1e;}
   .card.danger-card .card-body-inner{border-top-color:#662222;}
   .dias-big-wrap{display:flex;align-items:center;gap:16px;padding:12px 0 10px;}
@@ -61,6 +61,28 @@
   .card.danger-card .btn-sm.primary{background:var(--danger);color:#fff;border-color:var(--danger);}
   .btn-sm.red{border-color:#662222;color:var(--danger);}
 
+  .card.lav-card-mode{background:var(--gris);border:1px solid var(--cyan2);}
+  .card.lav-card-mode.warn-card{border-color:#665500;}
+  .card.lav-card-mode.danger-card{background:#001a1a;border:2px solid var(--cyan);}
+  .lav-block{padding:10px 16px 14px;border-top:1px dashed #3a2a00;user-select:none;-webkit-user-select:none;}
+  .card.ok-card .lav-block{border-top-color:#3a2a00;}
+  .card.warn-card .lav-block{border-top-color:#554400;}
+  .card.danger-card .lav-block{border-top-color:#5a2200;}
+  .lav-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .lav-block-title{font-size:.52rem;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+  .lav-badge{font-family:'Bebas Neue',sans-serif;font-size:1rem;line-height:1;}
+  .lav-badge.ok{color:var(--lav);}
+  .lav-badge.warn{color:var(--warn);}
+  .lav-badge.danger{color:var(--danger);animation:pulso 1s infinite;}
+  .lav-info{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
+  .lav-info .info-row span{color:var(--lav);}
+  .card.danger-card .lav-info .info-row span{color:#ffcc88;}
+  .prog-bar.lav{background:linear-gradient(90deg,var(--lav2),var(--lav));}
+  .btn-sm.lav-add{border-color:#3a2a00;color:var(--lav);font-size:.55rem;}
+  .btn-sm.lav-primary{background:var(--lav) !important;color:#0a0f0a !important;border-color:var(--lav) !important;}
+  .card.danger-card .btn-sm.lav-add{background:#1a0e00 !important;border-color:#5a3a00 !important;color:var(--lav) !important;}
+  .lav-acts{display:flex;gap:6px;margin-top:6px;}
+
   .card.ph-card{background:var(--gris);border:1px solid var(--cyan2);}
   .card.ph-card.warn-card{border-color:#665500;}
   .card.ph-card.danger-card{background:#001a1a;border:2px solid var(--cyan);animation:bparp-cyan 1.5s ease-in-out infinite;}
@@ -82,6 +104,7 @@
   .modal{background:#111f11;border:1px solid #1e3a1e;border-radius:20px 20px 0 0;padding:24px 20px 36px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;animation:slideup .25s ease;}
   .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--verde);margin-bottom:20px;}
   .modal-title.cyan{color:var(--cyan);}
+  .modal-title.lav{color:var(--lav);}
   .fg{margin-bottom:14px;}
   label{display:block;font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
   input,select{width:100%;background:var(--gris2);border:1px solid #1e3a1e;border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;padding:10px 14px;outline:none;-webkit-appearance:none;appearance:none;box-sizing:border-box;}
@@ -92,6 +115,7 @@
   .modal-btns{display:flex;gap:10px;margin-top:20px;}
   .btn-ok{flex:1;padding:13px;border-radius:8px;border:none;background:var(--verde2);color:#0a0f0a;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
   .btn-ok.cyan{background:var(--cyan);color:#0a0f0a;}
+  .btn-ok.lav{background:var(--lav);color:#0a0f0a;}
   .btn-cancel{flex:1;padding:13px;border-radius:8px;border:1px solid #1e3a1e;background:var(--gris2);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
   .backup-info{font-size:.62rem;color:var(--muted);line-height:1.8;margin-bottom:14px;}
   .backup-info b{color:var(--verde2);}
@@ -198,6 +222,14 @@
         <option value="Germinación">🌱 Germinación</option>
       </select>
     </div>
+    <div class="fg">
+      <label>¿Cuántos días lleva en total? <span id="m-finicio-preview" style="color:var(--verde2);font-size:.65rem;float:right;font-family:'Space Mono',monospace;"></span></label>
+      <input type="number" id="m-dias-total" min="0" max="999" placeholder="Ej: 30" oninput="previewFecha('total')">
+    </div>
+    <div class="fg">
+      <label>¿Días en la etapa actual? <span id="m-fetapa-preview" style="color:#ff88cc;font-size:.65rem;float:right;font-family:'Space Mono',monospace;"></span></label>
+      <input type="number" id="m-dias-etapa" min="0" max="999" placeholder="Ej: 10" oninput="previewFecha('etapa')">
+    </div>
     <div class="fg"><label>Fecha del último recambio</label><input type="date" id="m-fecha"></div>
     <div class="fg"><label>Días hasta el próximo recambio</label><input type="number" id="m-dias" min="1" max="60" placeholder="Ej: 7"></div>
     <div class="modal-btns">
@@ -216,6 +248,42 @@
     <div class="modal-btns">
       <button class="btn-cancel" onclick="cerrar('ov-ph')">CANCELAR</button>
       <button class="btn-ok cyan" onclick="guardarPH()">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: LAVADO DE RAÍZ -->
+<div class="overlay" id="ov-lav">
+  <div class="modal">
+    <div class="modal-title lav">🪣 Lavado de Raíz</div>
+    <input type="hidden" id="lav-sid">
+    <div class="fg"><label>Fecha del último lavado</label><input type="date" id="lav-fecha"></div>
+    <div class="fg"><label>Días hasta el próximo lavado</label><input type="number" id="lav-dias" min="1" max="365" placeholder="Ej: 14"></div>
+    <div class="fg"><label>Notas (opcional)</label><input type="text" id="lav-notas" maxlength="60" placeholder="Ej: Guardian Roots 3ml/L 24hs"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-lav')">CANCELAR</button>
+      <button class="btn-ok lav" onclick="guardarLavado()">GUARDAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: CAMBIAR ETAPA -->
+<div class="overlay" id="ov-etapa">
+  <div class="modal">
+    <div class="modal-title" id="et-title">Cambiar Etapa</div>
+    <div style="font-size:.58rem;letter-spacing:.15em;color:var(--muted);margin-bottom:14px;line-height:1.7;">El contador general de días <span style="color:var(--verde)">NO se resetea</span>.<br>El contador de días en etapa sí vuelve a 0.</div>
+    <div class="fg"><label>Nueva etapa</label>
+      <select id="et-etapa">
+        <option value="Vegetativa">🌿 Vegetativa</option>
+        <option value="Flora">🌸 Flora</option>
+        <option value="Vejez">🍂 Vejez / Maduración</option>
+        <option value="Germinación">🌱 Germinación</option>
+      </select>
+    </div>
+    <div class="fg"><label>Fecha de inicio de nueva etapa</label><input type="date" id="et-fecha"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-etapa')">CANCELAR</button>
+      <button class="btn-ok" onclick="confirmarEtapa()">CAMBIAR ETAPA</button>
     </div>
   </div>
 </div>
@@ -299,27 +367,33 @@
 </div>
 
 <script>
-const KEY='recambio_v5', KEY_PIN='recambio_pin', KEY_PH='recambio_ph', KEY_AB='recambio_autobackup';
+const KEY='recambio_v5', KEY_PIN='recambio_pin', KEY_PH='recambio_ph', KEY_AB='recambio_autobackup', KEY_LAV='recambio_lavados';
 const DEFAULT_PIN='779';
 const EMOJIS={Vegetativa:'🌿',Flora:'🌸',Vejez:'🍂','Germinación':'🌱'};
 let SS=[], editId=null, openIds=new Set();
+let LAVS=[];
 let PH=null;
+let lavEditId=null; // sistemaId activo en modal lavado
 
 function load(){
   try{SS=JSON.parse(localStorage.getItem(KEY))||[];}catch{SS=[];}
   try{PH=JSON.parse(localStorage.getItem(KEY_PH))||null;}catch{PH=null;}
+  try{LAVS=JSON.parse(localStorage.getItem(KEY_LAV))||[];}catch{LAVS=[];}
 }
 function save(){
   localStorage.setItem(KEY,JSON.stringify(SS));
-  // ✅ FIX: solo sobreescribe el auto-backup si hay datos reales
   if(SS.length>0||PH){autoBackup();}
 }
 function savePH(){
   localStorage.setItem(KEY_PH,JSON.stringify(PH));
   if(SS.length>0||PH){autoBackup();}
 }
+function saveLAV(){
+  localStorage.setItem(KEY_LAV,JSON.stringify(LAVS));
+  autoBackup();
+}
 function autoBackup(){
-  const snap={ss:SS,ph:PH,ts:new Date().toISOString()};
+  const snap={ss:SS,ph:PH,lavs:LAVS,ts:new Date().toISOString()};
   localStorage.setItem(KEY_AB,JSON.stringify(snap));
 }
 function getAutoBackup(){try{return JSON.parse(localStorage.getItem(KEY_AB))||null;}catch{return null;}}
@@ -327,11 +401,10 @@ function fmtTS(iso){if(!iso)return'—';const d=new Date(iso);const pad=n=>Strin
 function descargarAutoBackup(){
   const ab=getAutoBackup();
   if(!ab){alert('Sin auto-backup todavía.');return;}
-  // ✅ FIX: advertir si el backup está vacío
   if((!ab.ss||ab.ss.length===0)&&!ab.ph){
     if(!confirm('⚠️ El auto-backup está vacío. ¿Descargarlo igual?'))return;
   }
-  const blob=new Blob([JSON.stringify({ss:ab.ss,ph:ab.ph},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({ss:ab.ss,ph:ab.ph,lavs:ab.lavs||[]},null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
   const fecha=ab.ts?ab.ts.slice(0,10).replaceAll('-',''):'';
   a.href=url;a.download='recambio_hidro_backup_'+fecha+'.json';
@@ -343,6 +416,7 @@ function dif(a,b){return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:
 function fmtF(ds){if(!ds)return'—';const[y,m,d]=ds.split('-');return d+'/'+m+'/'+y;}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function rest(s){return dif(hoy(),sumar(s.fecha,s.dias));}
+function restar(ds,n){const d=new Date(ds+'T12:00:00');d.setDate(d.getDate()-n);return d.toISOString().split('T')[0];}
 function getPin(){return localStorage.getItem(KEY_PIN)||DEFAULT_PIN;}
 function setPin(p){localStorage.setItem(KEY_PIN,p);}
 
@@ -443,9 +517,25 @@ function abrirModal(id=null){
   document.getElementById('m-title').textContent=id?'Editar Sistema':'Nuevo Sistema';
   document.getElementById('m-nombre').value=s?s.nombre:'';
   document.getElementById('m-etapa').value=s?s.etapa:'Flora';
+  const diasTotal=s?(s.fechaInicio?dif(s.fechaInicio,hoy()):dif(s.fecha,hoy())):0;
+  const diasEtapa=s?(s.fechaEtapa?dif(s.fechaEtapa,hoy()):dif(s.fecha,hoy())):0;
+  document.getElementById('m-dias-total').value=s?diasTotal:'';
+  document.getElementById('m-dias-etapa').value=s?diasEtapa:'';
+  previewFecha('total');previewFecha('etapa');
   document.getElementById('m-fecha').value=s?s.fecha:hoy();
   document.getElementById('m-dias').value=s?s.dias:'';
   document.getElementById('ov-s').classList.add('open');
+}
+function previewFecha(tipo){
+  if(tipo==='total'){
+    const v=parseInt(document.getElementById('m-dias-total').value);
+    const el=document.getElementById('m-finicio-preview');
+    if(!isNaN(v)&&v>=0){const f=restar(hoy(),v);el.textContent='→ inicio '+fmtF(f);}else el.textContent='';
+  } else {
+    const v=parseInt(document.getElementById('m-dias-etapa').value);
+    const el=document.getElementById('m-fetapa-preview');
+    if(!isNaN(v)&&v>=0){const f=restar(hoy(),v);el.textContent='→ inicio '+fmtF(f);}else el.textContent='';
+  }
 }
 function abrirBackup(){
   const ab=getAutoBackup();
@@ -453,27 +543,109 @@ function abrirBackup(){
   document.getElementById('ab-dl-btn').disabled=!ab;
   document.getElementById('ov-b').classList.add('open');
 }
-function cerrar(id){document.getElementById(id).classList.remove('open');editId=null;}
+function cerrar(id){document.getElementById(id).classList.remove('open');if(id!=='ov-lav')editId=null;}
 function guardar(){
   const nombre=document.getElementById('m-nombre').value.trim();
   const etapa=document.getElementById('m-etapa').value;
+  const diasTotalVal=document.getElementById('m-dias-total').value;
+  const diasEtapaVal=document.getElementById('m-dias-etapa').value;
   const fecha=document.getElementById('m-fecha').value;
   const dias=parseInt(document.getElementById('m-dias').value);
   if(!nombre||!fecha||!dias||dias<1){alert('Completá todos los campos.');return;}
-  if(editId){const i=SS.findIndex(x=>x.id===editId);if(i!==-1)SS[i]={...SS[i],nombre,etapa,fecha,dias};}
-  else SS.push({id:uid(),nombre,etapa,fecha,dias});
+  const fechaInicio=diasTotalVal!==''?restar(hoy(),parseInt(diasTotalVal)):fecha;
+  const fechaEtapa=diasEtapaVal!==''?restar(hoy(),parseInt(diasEtapaVal)):fecha;
+  if(editId){const i=SS.findIndex(x=>x.id===editId);if(i!==-1)SS[i]={...SS[i],nombre,etapa,fecha,dias,fechaInicio,fechaEtapa};}
+  else SS.push({id:uid(),nombre,etapa,fecha,dias,fechaInicio,fechaEtapa});
   save();cerrar('ov-s');render();
 }
-function eliminar(id,e){e.stopPropagation();if(!confirm('¿Eliminás este sistema?'))return;SS=SS.filter(x=>x.id!==id);openIds.delete(id);save();render();}
+function eliminar(id,e){e.stopPropagation();if(!confirm('¿Eliminás este sistema?'))return;SS=SS.filter(x=>x.id!==id);LAVS=LAVS.filter(l=>l.sistemaId!==id);openIds.delete(id);save();saveLAV();render();}
 function recambioHoy(id,e){e.stopPropagation();const i=SS.findIndex(x=>x.id===id);if(i!==-1){SS[i].fecha=hoy();save();render();}}
 function editarCard(id,e){e.stopPropagation();abrirModal(id);}
+let etapaId=null;
+function abrirCambiarEtapa(id,e){
+  e.stopPropagation();
+  etapaId=id;
+  const s=SS.find(x=>x.id===id);
+  if(!s)return;
+  document.getElementById('et-title').textContent='⇄ Cambiar etapa · '+s.nombre;
+  document.getElementById('et-etapa').value=s.etapa;
+  document.getElementById('et-fecha').value=hoy();
+  document.getElementById('ov-etapa').classList.add('open');
+}
+function confirmarEtapa(){
+  if(!etapaId)return;
+  const nuevaEtapa=document.getElementById('et-etapa').value;
+  const fechaEtapa=document.getElementById('et-fecha').value;
+  if(!fechaEtapa){alert('Indicá la fecha de inicio de la nueva etapa.');return;}
+  const i=SS.findIndex(x=>x.id===etapaId);
+  if(i!==-1){
+    SS[i]={...SS[i],etapa:nuevaEtapa,fechaEtapa};
+    save();cerrar('ov-etapa');render();
+    etapaId=null;
+  }
+}
 function calibreHoy(e){e.stopPropagation();if(PH){PH.fecha=hoy();savePH();render();}}
 function editarPH(e){e.stopPropagation();abrirPH();}
 
+/* ── LAVADO DE RAÍZ ── */
+function abrirLavadoModal(sid,e){
+  e.stopPropagation();
+  lavEditId=sid;
+  document.getElementById('lav-sid').value=sid;
+  const lav=LAVS.find(l=>l.sistemaId===sid);
+  document.getElementById('lav-fecha').value=lav?lav.fecha:hoy();
+  document.getElementById('lav-dias').value=lav?lav.dias:'';
+  document.getElementById('lav-notas').value=lav?lav.notas||'':'';
+  document.getElementById('ov-lav').classList.add('open');
+}
+function guardarLavado(){
+  const sid=document.getElementById('lav-sid').value;
+  const fecha=document.getElementById('lav-fecha').value;
+  const dias=parseInt(document.getElementById('lav-dias').value);
+  const notas=document.getElementById('lav-notas').value.trim();
+  if(!sid){alert('Error: sistema no identificado.');return;}
+  if(!fecha||!dias||dias<1){alert('Completá fecha y días.');return;}
+  const idx=LAVS.findIndex(l=>l.sistemaId===sid);
+  const rec={sistemaId:sid,fecha,dias,notas};
+  if(idx!==-1) LAVS[idx]=rec; else LAVS.push(rec);
+  forzarAbierta(sid);
+  saveLAV();cerrar('ov-lav');render();
+}
+function forzarAbierta(sid){
+  // Las cards urgentes (r<=1) abren por defecto; se "cierran" con 'closed_'+id
+  // Las cards normales abren con el id en openIds
+  const s=SS.find(x=>x.id===sid);
+  if(!s) return;
+  const r=rest(s);
+  if(r<=1){
+    // urgente: eliminar el cierre forzado si existe
+    openIds.delete('closed_'+sid);
+  } else {
+    // normal: agregar el id para que quede abierta
+    openIds.add(sid);
+  }
+}
+function lavadoHoy(sid,e){
+  if(e){e.stopPropagation();e.preventDefault();}
+  const lavIdx=LAVS.findIndex(l=>l.sistemaId===sid);
+  const sisIdx=SS.findIndex(x=>x.id===sid);
+  if(lavIdx!==-1) LAVS[lavIdx].fecha=hoy();
+  if(sisIdx!==-1) SS[sisIdx].fecha=hoy();
+  forzarAbierta(sid);
+  saveLAV();
+  save();
+  render();
+}
+function eliminarLavado(sid,e){
+  e.stopPropagation();
+  if(!confirm('¿Quitás el seguimiento de lavado de este sistema?'))return;
+  LAVS=LAVS.filter(l=>l.sistemaId!==sid);
+  saveLAV();render();
+}
+
 /* ── BACKUP ── */
 function exportar(){
-  // ✅ FIX: exportar en el mismo formato que el auto-backup {ss, ph}
-  const data={ss:SS,ph:PH};
+  const data={ss:SS,ph:PH,lavs:LAVS};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
   a.href=url;a.download='recambio_backup_'+hoy().replaceAll('-','')+'.json';
@@ -486,28 +658,22 @@ function importar(){
   reader.onload=function(e){
     try{
       const data=JSON.parse(e.target.result);
-      let nuevosSS=[], nuevoPH=null;
-
-      // ✅ FIX: acepta tanto array [] como objeto {ss, ph}
+      let nuevosSS=[], nuevoPH=null, nuevosLAVS=[];
       if(Array.isArray(data)){
-        // Formato viejo: solo array de sistemas
         nuevosSS=data;
       } else if(data && Array.isArray(data.ss)){
-        // Formato nuevo: {ss: [...], ph: {...}}
         nuevosSS=data.ss;
         if(data.ph && data.ph.fecha && data.ph.dias) nuevoPH=data.ph;
+        if(data.lavs && Array.isArray(data.lavs)) nuevosLAVS=data.lavs;
       } else {
         throw new Error('Formato no reconocido');
       }
-
-      if(!confirm('¿Reemplazás todos los datos con el backup?\n\nSistemas encontrados: '+nuevosSS.length+(nuevoPH?'\nCalibración pH: ✓':'')))return;
-      SS=nuevosSS;
-      PH=nuevoPH;
+      if(!confirm('¿Reemplazás todos los datos con el backup?\n\nSistemas: '+nuevosSS.length+(nuevoPH?'\npH: ✓':'')+(nuevosLAVS.length?'\nLavados: '+nuevosLAVS.length:'')))return;
+      SS=nuevosSS; PH=nuevoPH; LAVS=nuevosLAVS;
       localStorage.setItem(KEY,JSON.stringify(SS));
       if(PH) localStorage.setItem(KEY_PH,JSON.stringify(PH));
-      autoBackup();
-      cerrar('ov-b');
-      render();
+      localStorage.setItem(KEY_LAV,JSON.stringify(LAVS));
+      autoBackup(); cerrar('ov-b'); render();
       alert('✅ Backup importado correctamente.\n'+nuevosSS.length+' sistemas cargados.');
     }catch(err){
       alert('❌ Archivo inválido. Asegurate de usar un backup generado por esta app.');
@@ -517,10 +683,49 @@ function importar(){
 }
 
 /* ── RENDER ── */
+function lavBlock(sid){
+  const lav=LAVS.find(l=>l.sistemaId===sid);
+  if(!lav){
+    return`<div class="lav-block">
+      <div class="lav-block-header">
+        <div class="lav-block-title">🪣 Lavado de raíz</div>
+        <button class="btn-sm lav-add" style="flex:0;padding:5px 10px;" onclick="abrirLavadoModal('${sid}',event)">+ Configurar</button>
+      </div>
+    </div>`;
+  }
+  const r=dif(hoy(),sumar(lav.fecha,lav.dias));
+  const prox=sumar(lav.fecha,lav.dias);
+  const pct=Math.min(100,Math.max(0,(dif(lav.fecha,hoy())/lav.dias)*100));
+  const dc=r<=1?'danger':r<=2?'warn':'ok';
+  const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)+'d'):(r+'d');
+  return`<div class="lav-block">
+    <div class="lav-block-header">
+      <div class="lav-block-title">🪣 Lavado de raíz <span class="lav-badge ${dc}">${diasTxt}</span></div>
+    </div>
+    <div class="lav-info">
+      <div class="info-row">Último lavado <span>${fmtF(lav.fecha)}</span></div>
+      <div class="info-row">Próximo <span>${fmtF(prox)}</span></div>
+      <div class="info-row">Ciclo <span>${lav.dias} días</span></div>
+      ${lav.notas?`<div class="info-row">Notas <span>${lav.notas}</span></div>`:''}
+      <div class="prog-wrap"><div class="prog-bar lav" style="width:${pct}%"></div></div>
+    </div>
+    <div class="lav-acts">
+      <button class="btn-sm lav-primary" onclick="lavadoHoy('${sid}',event);return false;">✓ Lavé hoy</button>
+      <button class="btn-sm lav-add" onclick="abrirLavadoModal('${sid}',event);return false;">✎ Editar</button>
+      <button class="btn-sm red" onclick="eliminarLavado('${sid}',event);return false;">✕</button>
+    </div>
+  </div>`;
+}
+
 function render(){
   const grid=document.getElementById('grid');
   const alerta=document.getElementById('alerta');
-  const urgentes=SS.filter(s=>rest(s)<=1);
+  // Para sistemas con lavado, el urgente es el del lavado
+  const urgentes=SS.filter(s=>{
+    const lav=LAVS.find(l=>l.sistemaId===s.id);
+    const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);
+    return r<=1;
+  });
   const phRest=PH?dif(hoy(),sumar(PH.fecha,PH.dias)):null;
   const phUrgente=phRest!==null&&phRest<=1;
 
@@ -529,8 +734,10 @@ function render(){
     const nombres=[...urgentes.map(s=>s.nombre),...(phUrgente?['pH MEDIDOR']:[])];
     document.getElementById('al-nombre').textContent=nombres.join(' · ');
     if(nombres.length===1&&urgentes.length===1){
-      const r=rest(urgentes[0]);
-      document.getElementById('al-sub').textContent=r<=0?(r===0?'¡RECAMBIO HOY!':`VENCIDO hace ${Math.abs(r)} día${Math.abs(r)>1?'s':''}`):'⏰ MAÑANA ES EL RECAMBIO';
+      const lav=LAVS.find(l=>l.sistemaId===urgentes[0].id);
+      const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(urgentes[0]);
+      const accion=lav?'LAVADO':'RECAMBIO';
+      document.getElementById('al-sub').textContent=r<=0?(r===0?`¡${accion} HOY!`:`VENCIDO hace ${Math.abs(r)} día${Math.abs(r)>1?'s':''}`):`⏰ MAÑANA: ${accion}`;
     }else if(nombres.length===1&&phUrgente){
       document.getElementById('al-sub').textContent=phRest<=0?'¡CALIBRAR HOY!':'⏰ CALIBRAR MAÑANA';
     }else{
@@ -544,7 +751,11 @@ function render(){
   }
 
   const items=[];
-  SS.forEach(s=>items.push({tipo:'sistema',data:s,r:rest(s)}));
+  SS.forEach(s=>{
+    const lav=LAVS.find(l=>l.sistemaId===s.id);
+    const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);
+    items.push({tipo:'sistema',data:s,r});
+  });
   if(PH) items.push({tipo:'ph',data:PH,r:phRest});
   items.sort((a,b)=>a.r-b.r);
 
@@ -586,21 +797,87 @@ function render(){
       </div>`;
     } else {
       const s=item.data;
-      const r=item.r;
+      const lav=LAVS.find(l=>l.sistemaId===s.id);
+      const r=lav ? dif(hoy(),sumar(lav.fecha,lav.dias)) : item.r;
       const isUrgente=r<=1;
       const isOpen=isUrgente?!openIds.has('closed_'+s.id):openIds.has(s.id);
-      const prox=sumar(s.fecha,s.dias);
-      const trans=dif(s.fecha,hoy());
-      const pct=Math.min(100,Math.max(0,(trans/s.dias)*100));
-      const dc=r<=1?'danger':r<=2?'warn':'ok';
+      const prox=lav ? sumar(lav.fecha,lav.dias) : sumar(s.fecha,s.dias);
+      const fechaRef=lav ? lav.fecha : s.fecha;
+      const ciclo=lav ? lav.dias : s.dias;
+      const trans=dif(fechaRef,hoy());
+      const pct=Math.min(100,Math.max(0,(trans/ciclo)*100));
+      const dc=lav?(r<=1?'danger':r<=2?'warn':'cyan'):(r<=1?'danger':r<=2?'warn':'ok');
       const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
+      const cardExtra=lav?' lav-card-mode':'';
       const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)):String(r);
       const diasMini=r<=0?(r===0?'HOY':'+'+Math.abs(r)+'d'):(r+'d');
+      const dGeneral=dif(s.fechaInicio||s.fecha,hoy());
+      const dEtapa=dif(s.fechaEtapa||s.fecha,hoy());
+
+      if(lav){
+        // Card modo lavado — título principal cyan, sin bloque separado
+        const nombreColor=r<=1?'#fff':r<=2?'var(--warn)':'var(--cyan)';
+        return`<div class="card ${cardCls}${cardExtra}${isOpen?' open':''}" id="card-${s.id}">
+          <div class="card-head" onclick="toggleCard2('${s.id}',${isUrgente})">
+            <div class="card-head-left">
+              <div class="dias-mini ${dc}">${diasMini}</div>
+              <div style="flex:1;">
+                <div class="card-nombre" style="color:${nombreColor};">🪣 ${s.nombre}</div>
+                <div class="card-etapa" style="border-color:var(--cyan2);color:#008888;">LAVADO DE RAÍZ · ${EMOJIS[s.etapa]||''} ${s.etapa}</div>
+                <div style="display:flex;gap:6px;margin-top:5px;">
+                  <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+                    <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">Total</span>
+                    <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--verde);line-height:1;">D${dGeneral}</span>
+                  </div>
+                  <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+                    <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">${s.etapa==='Flora'?'Flora':s.etapa==='Vegetativa'?'Vege':s.etapa==='Germinación'?'Germ':'Vejez'}</span>
+                    <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:${s.etapa==='Flora'?'#ff88cc':s.etapa==='Vegetativa'?'#66ff99':s.etapa==='Germinación'?'#88ff88':'#ffcc88'};line-height:1;">D${dEtapa}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chevron">▼</div>
+          </div>
+          <div class="card-body"><div class="card-body-inner" style="border-top-color:var(--cyan2);user-select:none;-webkit-user-select:none;">
+            <div class="dias-big-wrap">
+              <div class="dias-big ${dc}">${diasTxt}</div>
+              <div class="info">
+                <div class="info-row">Último lavado <span>${fmtF(fechaRef)}</span></div>
+                <div class="info-row">Próximo lavado <span>${fmtF(prox)}</span></div>
+                <div class="info-row">Ciclo <span>${ciclo} días</span></div>
+                ${lav.notas?`<div class="info-row">Notas <span style="color:var(--cyan)">${lav.notas}</span></div>`:''}
+                <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
+              </div>
+            </div>
+            <div class="card-acts">
+              <button class="btn-sm cyan-primary" onclick="lavadoHoy('${s.id}',event);return false;">✓ Lavé hoy</button>
+              <button class="btn-sm" onclick="abrirLavadoModal('${s.id}',event);return false;">✎ Lavado</button>
+              <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Sistema</button>
+              <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>
+            </div>
+          </div></div>
+        </div>`;
+      }
+
+      // Card modo recambio normal
       return`<div class="card ${cardCls}${isOpen?' open':''}" id="card-${s.id}">
         <div class="card-head" onclick="toggleCard2('${s.id}',${isUrgente})">
           <div class="card-head-left">
             <div class="dias-mini ${dc}">${diasMini}</div>
-            <div><div class="card-nombre">${s.nombre}</div><div class="card-etapa">${EMOJIS[s.etapa]||''} ${s.etapa}</div></div>
+            <div style="flex:1;">
+              <div class="card-nombre">${s.nombre}</div>
+              <div class="card-etapa">${EMOJIS[s.etapa]||''} ${s.etapa}</div>
+              <div style="display:flex;gap:6px;margin-top:5px;">
+                <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+                  <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">Total</span>
+                  <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--verde);line-height:1;">D${dGeneral}</span>
+                </div>
+                <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+                  <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">${s.etapa==='Flora'?'Flora':s.etapa==='Vegetativa'?'Vege':s.etapa==='Germinación'?'Germ':'Vejez'}</span>
+                  <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:${s.etapa==='Flora'?'#ff88cc':s.etapa==='Vegetativa'?'#66ff99':s.etapa==='Germinación'?'#88ff88':'#ffcc88'};line-height:1;">D${dEtapa}</span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="chevron">▼</div>
         </div>
@@ -608,18 +885,20 @@ function render(){
           <div class="dias-big-wrap">
             <div class="dias-big ${dc}">${diasTxt}</div>
             <div class="info">
-              <div class="info-row">Último recambio <span>${fmtF(s.fecha)}</span></div>
-              <div class="info-row">Próximo <span>${fmtF(prox)}</span></div>
-              <div class="info-row">Ciclo <span>${s.dias} días</span></div>
+              <div class="info-row">Último recambio <span>${fmtF(fechaRef)}</span></div>
+              <div class="info-row">Próximo recambio <span>${fmtF(prox)}</span></div>
+              <div class="info-row">Ciclo <span>${ciclo} días</span></div>
               <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
             </div>
           </div>
           <div class="card-acts">
             <button class="btn-sm primary" onclick="recambioHoy('${s.id}',event)">✓ Recambié hoy</button>
             <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Editar</button>
+            <button class="btn-sm" onclick="abrirCambiarEtapa('${s.id}',event)" style="border-color:#5a3a7a;color:#cc88ff;">⇄ Etapa</button>
             <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>
           </div>
         </div></div>
+        ${lavBlock(s.id)}
       </div>`;
     }
   }).join('');
@@ -641,7 +920,6 @@ document.querySelectorAll('.overlay').forEach(ov=>{
 });
 
 function salirYBackup(){
-  // ✅ FIX: solo descargar si hay datos
   if((!SS||SS.length===0)&&!PH){
     alert('⚠️ No hay datos para guardar.');
     return;
