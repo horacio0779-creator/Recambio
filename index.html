@@ -280,7 +280,8 @@
     <input type="hidden" id="corte-sid">
     <div id="corte-info" style="background:#1a1020;border:1px solid #3a2050;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:.62rem;color:#cc99ee;line-height:1.8;"></div>
     <div class="fg"><label>Fecha del corte</label><input type="date" id="corte-fecha"></div>
-    <div class="fg"><label>Notas del corte (opcional)</label><input type="text" id="corte-notas" maxlength="100" placeholder="Ej: 45g secos, buen rendimiento…"></div>
+    <div class="fg"><label>⚖ Gramos secos obtenidos (opcional)</label><input type="number" id="corte-gramos" min="0" max="9999" step="0.1" placeholder="Ej: 45.5"></div>
+    <div class="fg"><label>Notas del corte (opcional)</label><input type="text" id="corte-notas" maxlength="100" placeholder="Ej: Buen rendimiento, aroma intenso…"></div>
     <div style="font-size:.55rem;color:var(--muted);line-height:1.7;margin-bottom:4px;">El sistema se moverá al <span style="color:var(--corte)">Historial de Cortes</span> y desaparecerá de la pantalla principal.</div>
     <div class="modal-btns">
       <button class="btn-cancel" onclick="cerrar('ov-corte')">CANCELAR</button>
@@ -500,6 +501,7 @@ function abrirCorte(id,e){
   const s=SS.find(x=>x.id===id);if(!s)return;
   document.getElementById('corte-sid').value=id;
   document.getElementById('corte-fecha').value=hoy();
+  document.getElementById('corte-gramos').value='';
   document.getElementById('corte-notas').value='';
   const dGeneral=dif(s.fechaInicio||s.fecha,hoy());
   const dEtapa=dif(s.fechaEtapa||s.fecha,hoy());
@@ -514,6 +516,8 @@ function confirmarCorte(){
   const id=document.getElementById('corte-sid').value;
   const fecha=document.getElementById('corte-fecha').value;
   const notas=document.getElementById('corte-notas').value.trim();
+  const gramosVal=document.getElementById('corte-gramos').value;
+  const gramos=gramosVal!==''?parseFloat(gramosVal):null;
   if(!id||!fecha){alert('Falta la fecha.');return;}
   const s=SS.find(x=>x.id===id);if(!s)return;
   const lav=LAVS.find(l=>l.sistemaId===id);
@@ -524,7 +528,7 @@ function confirmarCorte(){
     nombre:s.nombre,semilla:s.semilla||'',desc:s.desc||'',
     etapa:s.etapa,dGeneral,dEtapa,
     fechaInicio:s.fechaInicio||s.fecha,
-    notas,
+    notas,gramos,
     lavNotas:lav?lav.notas||'':'',
   };
   HIST.unshift(entrada);
@@ -647,6 +651,7 @@ function renderHistorial(){
         <div class="hist-row">Días totales <span>${h.dGeneral}</span></div>
         <div class="hist-row">Días en etapa <span>${h.dEtapa}</span></div>
         <div class="hist-row">Inicio cultivo <span>${fmtF(h.fechaInicio)}</span></div>
+        ${h.gramos!=null?`<div class="hist-row">⚖ Gramos secos <span style="color:#ffee88;font-family:'Bebas Neue',sans-serif;font-size:1rem;">${h.gramos}g</span></div>`:''}
         ${h.notas?`<div class="hist-row">Notas <span>${h.notas}</span></div>`:''}
         ${h.lavNotas?`<div class="hist-row">Lavado <span>${h.lavNotas}</span></div>`:''}
       </div>
