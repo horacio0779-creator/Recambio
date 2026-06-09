@@ -544,6 +544,18 @@ function eliminarHistorial(hid,e){
   HIST=HIST.filter(h=>h.id!==hid);
   saveHIST();renderHistorial();
 }
+function agregarGramos(hid,e){
+  e.stopPropagation();
+  const idx=HIST.findIndex(h=>h.id===hid);
+  if(idx===-1)return;
+  if(HIST[idx].gramos!=null){alert('Los gramos ya fueron registrados y no se pueden modificar.');return;}
+  const val=prompt('⚖ Ingresá los gramos secos obtenidos:');
+  if(val===null||val.trim()==='')return;
+  const g=parseFloat(val.replace(',','.'));
+  if(isNaN(g)||g<0){alert('Valor inválido.');return;}
+  HIST[idx].gramos=g;
+  saveHIST();renderHistorial();
+}
 function toggleHistorial(){histOpen=!histOpen;renderHistorial();}
 
 /* ── LAVADO ── */
@@ -651,7 +663,7 @@ function renderHistorial(){
         <div class="hist-row">Días totales <span>${h.dGeneral}</span></div>
         <div class="hist-row">Días en etapa <span>${h.dEtapa}</span></div>
         <div class="hist-row">Inicio cultivo <span>${fmtF(h.fechaInicio)}</span></div>
-        ${h.gramos!=null?`<div class="hist-row">⚖ Gramos secos <span style="color:#ffee88;font-family:'Bebas Neue',sans-serif;font-size:1rem;">${h.gramos}g</span></div>`:''}
+        ${h.gramos!=null?`<div class="hist-row">⚖ Gramos secos <span style="color:#ffee88;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;">${h.gramos}g</span></div>`:`<div style="margin-top:6px;"><button style="background:transparent;border:1px dashed #ffee4466;border-radius:8px;color:#ffee88;font-family:'Space Mono',monospace;font-size:.6rem;padding:7px 14px;cursor:pointer;width:100%;" onclick="agregarGramos('${h.id}',event)">⚖ + Agregar gramos secos</button></div>`}
         ${h.notas?`<div class="hist-row">Notas <span>${h.notas}</span></div>`:''}
         ${h.lavNotas?`<div class="hist-row">Lavado <span>${h.lavNotas}</span></div>`:''}
       </div>
