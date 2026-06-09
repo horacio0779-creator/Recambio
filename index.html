@@ -6,7 +6,7 @@
 <title>💧 Recambio Hidro</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  :root{--verde:#00ff88;--verde2:#00cc66;--oscuro:#0a0f0a;--gris:#1a2a1a;--gris2:#0f1f0f;--warn:#ffcc00;--danger:#ff4444;--text:#c8e6c9;--muted:#4a7a4a;--cyan:#00cccc;--cyan2:#1e5a5a;--lav:#ffaa00;--lav2:#cc7700;}
+  :root{--verde:#00ff88;--verde2:#00cc66;--oscuro:#0a0f0a;--gris:#1a2a1a;--gris2:#0f1f0f;--warn:#ffcc00;--danger:#ff4444;--text:#c8e6c9;--muted:#4a7a4a;--cyan:#00cccc;--cyan2:#1e5a5a;--lav:#ffaa00;--lav2:#cc7700;--corte:#cc88ff;}
   *{margin:0;padding:0;box-sizing:border-box;}
   body{background:var(--oscuro);color:var(--text);font-family:'Space Mono',monospace;min-height:100vh;padding:24px 16px 48px;background-image:radial-gradient(ellipse at 20% 50%,#0d2a0d 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,#0a200a 0%,transparent 50%);}
   header{text-align:center;margin-bottom:20px;}
@@ -24,20 +24,26 @@
   .card.ok-card{background:var(--gris);border:1px solid #1e3a1e;}
   .card.warn-card{background:var(--gris);border:1px solid #665500;}
   .card.danger-card{background:#1a0000;border:2px solid var(--danger);animation:bparp 1.5s ease-in-out infinite;}
+  .card.lav-card-mode{background:var(--gris);border:1px solid var(--cyan2);}
+  .card.lav-card-mode.warn-card{border-color:#665500;}
+  .card.lav-card-mode.danger-card{background:#001a1a;border:2px solid var(--cyan);}
   .card-head{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;user-select:none;-webkit-user-select:none;}
   .card-head-left{display:flex;align-items:center;gap:12px;}
   .card-nombre{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.1em;color:var(--verde);}
   .card.danger-card .card-nombre{color:#fff;}
-  .card-etapa{font-size:.5rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;background:var(--gris2);padding:2px 7px;border-radius:20px;border:1px solid #1e3a1e;}
+  .card-etapa{font-size:.5rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;background:var(--gris2);padding:2px 7px;border-radius:20px;border:1px solid #1e3a1e;display:inline-block;margin-top:2px;}
   .card.danger-card .card-etapa{background:#2a0000;border-color:#662222;}
+  .card-semilla{font-size:.58rem;color:#88cc88;letter-spacing:.05em;margin-top:3px;}
+  .card-desc{font-size:.5rem;color:var(--muted);letter-spacing:.03em;margin-top:2px;line-height:1.4;}
   .dias-mini{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;min-width:52px;text-align:center;}
   .dias-mini.ok{color:var(--verde);}
   .dias-mini.warn{color:var(--warn);}
   .dias-mini.danger{color:var(--danger);animation:pulso 1s infinite;}
+  .dias-mini.cyan{color:var(--cyan);}
   .chevron{color:var(--muted);font-size:.65rem;transition:transform .25s;margin-left:6px;}
   .card.open .chevron{transform:rotate(180deg);}
-  .card-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
-  .card.open .card-body{max-height:700px;}
+  .card-body{max-height:0;overflow:hidden;transition:max-height .45s ease;}
+  .card.open .card-body{max-height:800px;}
   .card-body-inner{padding:0 16px 14px;border-top:1px solid #1e3a1e;}
   .card.danger-card .card-body-inner{border-top-color:#662222;}
   .dias-big-wrap{display:flex;align-items:center;gap:16px;padding:12px 0 10px;}
@@ -45,54 +51,57 @@
   .dias-big.ok{color:var(--verde);text-shadow:0 0 30px #00ff8844;}
   .dias-big.warn{color:var(--warn);text-shadow:0 0 30px #ffcc0044;}
   .dias-big.danger{color:var(--danger);text-shadow:0 0 40px #ff4444aa;animation:pulso 1s infinite;}
+  .dias-big.cyan{color:var(--cyan);text-shadow:0 0 30px #00cccc44;}
   .info{flex:1;display:flex;flex-direction:column;gap:6px;}
   .info-row{display:flex;justify-content:space-between;font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
   .info-row span{color:var(--text);}
   .card.danger-card .info-row span{color:#ffaaaa;}
   .prog-wrap{background:#0f1f0f;border-radius:4px;height:5px;overflow:hidden;margin-top:2px;}
+  .prog-bar{height:100%;border-radius:4px;transition:width .5s;}
   .prog-bar.ok{background:linear-gradient(90deg,var(--verde2),var(--verde));}
   .prog-bar.warn{background:linear-gradient(90deg,#cc9900,var(--warn));}
   .prog-bar.danger{background:linear-gradient(90deg,#cc2222,var(--danger));}
-  .prog-bar{height:100%;border-radius:4px;transition:width .5s;}
-  .card-acts{display:flex;gap:8px;}
-  .btn-sm{flex:1;padding:7px 4px;background:var(--gris2);border:1px solid #1e3a1e;border-radius:8px;color:var(--muted);font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;}
+  .prog-bar.cyan{background:linear-gradient(90deg,#009999,var(--cyan));}
+  .card-acts{display:flex;gap:6px;flex-wrap:wrap;}
+  .btn-sm{flex:1;padding:7px 4px;background:var(--gris2);border:1px solid #1e3a1e;border-radius:8px;color:var(--muted);font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;}
   .card.danger-card .btn-sm{background:#2a0000;border-color:#442222;}
   .btn-sm.primary{background:var(--verde2);color:#0a0f0a;border-color:var(--verde2);}
   .card.danger-card .btn-sm.primary{background:var(--danger);color:#fff;border-color:var(--danger);}
+  .btn-sm.cyan-primary{background:var(--cyan) !important;color:#0a0f0a !important;border-color:var(--cyan) !important;}
   .btn-sm.red{border-color:#662222;color:var(--danger);}
+  .btn-sm.corte{border-color:#5a3a7a;color:var(--corte);}
 
-  .card.lav-card-mode{background:var(--gris);border:1px solid var(--cyan2);}
-  .card.lav-card-mode.warn-card{border-color:#665500;}
-  .card.lav-card-mode.danger-card{background:#001a1a;border:2px solid var(--cyan);}
+  /* Lavado dentro de card */
   .lav-block{padding:10px 16px 14px;border-top:1px dashed #3a2a00;user-select:none;-webkit-user-select:none;}
-  .card.ok-card .lav-block{border-top-color:#3a2a00;}
-  .card.warn-card .lav-block{border-top-color:#554400;}
-  .card.danger-card .lav-block{border-top-color:#5a2200;}
   .lav-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
   .lav-block-title{font-size:.52rem;letter-spacing:.2em;color:var(--lav);text-transform:uppercase;display:flex;align-items:center;gap:6px;}
   .lav-badge{font-family:'Bebas Neue',sans-serif;font-size:1rem;line-height:1;}
-  .lav-badge.ok{color:var(--lav);}
+  .lav-badge.ok{color:var(--cyan);}
   .lav-badge.warn{color:var(--warn);}
   .lav-badge.danger{color:var(--danger);animation:pulso 1s infinite;}
-  .lav-info{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
-  .lav-info .info-row span{color:var(--lav);}
-  .card.danger-card .lav-info .info-row span{color:#ffcc88;}
-  .prog-bar.lav{background:linear-gradient(90deg,var(--lav2),var(--lav));}
-  .btn-sm.lav-add{border-color:#3a2a00;color:var(--lav);font-size:.55rem;}
+  .btn-sm.lav-add{border-color:#3a2a00 !important;color:var(--lav) !important;}
   .btn-sm.lav-primary{background:var(--lav) !important;color:#0a0f0a !important;border-color:var(--lav) !important;}
-  .card.danger-card .btn-sm.lav-add{background:#1a0e00 !important;border-color:#5a3a00 !important;color:var(--lav) !important;}
-  .lav-acts{display:flex;gap:6px;margin-top:6px;}
 
+  /* pH card */
   .card.ph-card{background:var(--gris);border:1px solid var(--cyan2);}
   .card.ph-card.warn-card{border-color:#665500;}
   .card.ph-card.danger-card{background:#001a1a;border:2px solid var(--cyan);animation:bparp-cyan 1.5s ease-in-out infinite;}
   .card.ph-card .card-nombre{color:var(--cyan);}
   .card.ph-card .card-etapa{border-color:var(--cyan2);color:#008888;}
   .card.ph-card .card-body-inner{border-top-color:var(--cyan2);}
-  .dias-mini.cyan{color:var(--cyan);}
-  .dias-big.cyan{color:var(--cyan);text-shadow:0 0 30px #00cccc44;}
-  .prog-bar.cyan{background:linear-gradient(90deg,#009999,var(--cyan));}
-  .btn-sm.cyan-primary{background:var(--cyan);color:#0a0f0a;border-color:var(--cyan);}
+
+  /* Historial */
+  #historial-section{max-width:480px;margin:0 auto 20px;}
+  .hist-toggle{width:100%;padding:12px;background:transparent;border:1px solid #2a1a4a;border-radius:12px;color:var(--corte);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.15em;cursor:pointer;text-align:left;}
+  .hist-list{display:none;flex-direction:column;gap:8px;margin-top:8px;}
+  .hist-list.open{display:flex;}
+  .hist-card{background:#1a1020;border:1px solid #3a2050;border-radius:12px;padding:14px 16px;}
+  .hist-nombre{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;color:var(--corte);letter-spacing:.08em;}
+  .hist-semilla{font-size:.55rem;color:#88cc88;margin-top:2px;}
+  .hist-rows{margin-top:8px;display:flex;flex-direction:column;gap:4px;}
+  .hist-row{display:flex;justify-content:space-between;font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+  .hist-row span{color:#cc99ee;}
+  .hist-del{background:transparent;border:1px solid #3a1a3a;border-radius:6px;color:#662266;font-size:.5rem;padding:3px 8px;cursor:pointer;font-family:'Space Mono',monospace;margin-top:8px;}
 
   .bottom{display:flex;gap:10px;max-width:480px;margin:0 auto;flex-wrap:wrap;}
   .btn-dash{flex:1;padding:14px;background:transparent;border:1px dashed #1e3a1e;border-radius:16px;color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.15em;cursor:pointer;}
@@ -105,6 +114,7 @@
   .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.1em;color:var(--verde);margin-bottom:20px;}
   .modal-title.cyan{color:var(--cyan);}
   .modal-title.lav{color:var(--lav);}
+  .modal-title.corte{color:var(--corte);}
   .fg{margin-bottom:14px;}
   label{display:block;font-size:.58rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
   input,select{width:100%;background:var(--gris2);border:1px solid #1e3a1e;border-radius:8px;color:var(--text);font-family:'Space Mono',monospace;font-size:.85rem;padding:10px 14px;outline:none;-webkit-appearance:none;appearance:none;box-sizing:border-box;}
@@ -114,8 +124,9 @@
   select option{background:#111f11;}
   .modal-btns{display:flex;gap:10px;margin-top:20px;}
   .btn-ok{flex:1;padding:13px;border-radius:8px;border:none;background:var(--verde2);color:#0a0f0a;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
-  .btn-ok.cyan{background:var(--cyan);color:#0a0f0a;}
-  .btn-ok.lav{background:var(--lav);color:#0a0f0a;}
+  .btn-ok.cyan{background:var(--cyan);}
+  .btn-ok.lav{background:var(--lav);}
+  .btn-ok.corte{background:var(--corte);}
   .btn-cancel{flex:1;padding:13px;border-radius:8px;border:1px solid #1e3a1e;background:var(--gris2);color:var(--muted);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;cursor:pointer;}
   .backup-info{font-size:.62rem;color:var(--muted);line-height:1.8;margin-bottom:14px;}
   .backup-info b{color:var(--verde2);}
@@ -163,27 +174,16 @@
 </head>
 <body>
 
-<!-- PIN LOCK -->
+<!-- PIN -->
 <div id="pin-screen">
-  <div>
-    <div class="pin-title">💧 RECAMBIO</div>
-    <div class="pin-sub">Ingresá tu PIN para continuar</div>
-  </div>
+  <div><div class="pin-title">💧 RECAMBIO</div><div class="pin-sub">Ingresá tu PIN para continuar</div></div>
   <div class="pin-dots" id="lock-dots"></div>
   <div class="pin-error-msg" id="lock-err"></div>
   <div class="pin-pad">
-    <button class="pin-btn" onclick="lockKey('1')">1</button>
-    <button class="pin-btn" onclick="lockKey('2')">2</button>
-    <button class="pin-btn" onclick="lockKey('3')">3</button>
-    <button class="pin-btn" onclick="lockKey('4')">4</button>
-    <button class="pin-btn" onclick="lockKey('5')">5</button>
-    <button class="pin-btn" onclick="lockKey('6')">6</button>
-    <button class="pin-btn" onclick="lockKey('7')">7</button>
-    <button class="pin-btn" onclick="lockKey('8')">8</button>
-    <button class="pin-btn" onclick="lockKey('9')">9</button>
-    <div class="pin-btn empty"></div>
-    <button class="pin-btn" onclick="lockKey('0')">0</button>
-    <button class="pin-btn del" onclick="lockDel()">⌫</button>
+    <button class="pin-btn" onclick="lockKey('1')">1</button><button class="pin-btn" onclick="lockKey('2')">2</button><button class="pin-btn" onclick="lockKey('3')">3</button>
+    <button class="pin-btn" onclick="lockKey('4')">4</button><button class="pin-btn" onclick="lockKey('5')">5</button><button class="pin-btn" onclick="lockKey('6')">6</button>
+    <button class="pin-btn" onclick="lockKey('7')">7</button><button class="pin-btn" onclick="lockKey('8')">8</button><button class="pin-btn" onclick="lockKey('9')">9</button>
+    <div class="pin-btn empty"></div><button class="pin-btn" onclick="lockKey('0')">0</button><button class="pin-btn del" onclick="lockDel()">⌫</button>
   </div>
 </div>
 
@@ -194,11 +194,15 @@
     <p class="sub">Gestión de sistemas · Hidro</p>
   </header>
   <div id="alerta">
-    <div class="al-label">⚠ RECAMBIO URGENTE</div>
+    <div class="al-label">⚠ ATENCIÓN</div>
     <div class="al-nombre" id="al-nombre"></div>
     <div class="al-sub" id="al-sub"></div>
   </div>
   <div id="grid"></div>
+  <div id="historial-section">
+    <button class="hist-toggle" onclick="toggleHistorial()">✂ HISTORIAL DE CORTES <span id="hist-count"></span></button>
+    <div class="hist-list" id="hist-list"></div>
+  </div>
   <div class="bottom">
     <button class="btn-dash" onclick="abrirModal()">+ AGREGAR SISTEMA</button>
     <button class="btn-ph-main" onclick="abrirPH()">🔬 pH</button>
@@ -213,7 +217,9 @@
 <div class="overlay" id="ov-s">
   <div class="modal">
     <div class="modal-title" id="m-title">Nuevo Sistema</div>
-    <div class="fg"><label>Nombre</label><input type="text" id="m-nombre" maxlength="30" placeholder="Ej: Recirculante A…"></div>
+    <div class="fg"><label>Nombre del sistema</label><input type="text" id="m-nombre" maxlength="30" placeholder="Ej: Recirculante A…"></div>
+    <div class="fg"><label>🌱 Semilla / Genética</label><input type="text" id="m-semilla" maxlength="40" placeholder="Ej: White Widow, Auto OG Kush…"></div>
+    <div class="fg"><label>Descripción (opcional)</label><input type="text" id="m-desc" maxlength="80" placeholder="Ej: Feminizada, 60 días flora, efecto relajante…"></div>
     <div class="fg"><label>Etapa</label>
       <select id="m-etapa">
         <option value="Vegetativa">🌿 Vegetativa</option>
@@ -252,7 +258,7 @@
   </div>
 </div>
 
-<!-- MODAL: LAVADO DE RAÍZ -->
+<!-- MODAL: LAVADO -->
 <div class="overlay" id="ov-lav">
   <div class="modal">
     <div class="modal-title lav">🪣 Lavado de Raíz</div>
@@ -267,11 +273,27 @@
   </div>
 </div>
 
-<!-- MODAL: CAMBIAR ETAPA -->
+<!-- MODAL: CORTE -->
+<div class="overlay" id="ov-corte">
+  <div class="modal">
+    <div class="modal-title corte">✂ Registrar Corte</div>
+    <input type="hidden" id="corte-sid">
+    <div id="corte-info" style="background:#1a1020;border:1px solid #3a2050;border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:.62rem;color:#cc99ee;line-height:1.8;"></div>
+    <div class="fg"><label>Fecha del corte</label><input type="date" id="corte-fecha"></div>
+    <div class="fg"><label>Notas del corte (opcional)</label><input type="text" id="corte-notas" maxlength="100" placeholder="Ej: 45g secos, buen rendimiento…"></div>
+    <div style="font-size:.55rem;color:var(--muted);line-height:1.7;margin-bottom:4px;">El sistema se moverá al <span style="color:var(--corte)">Historial de Cortes</span> y desaparecerá de la pantalla principal.</div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-corte')">CANCELAR</button>
+      <button class="btn-ok corte" onclick="confirmarCorte()">✂ CORTAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ETAPA -->
 <div class="overlay" id="ov-etapa">
   <div class="modal">
     <div class="modal-title" id="et-title">Cambiar Etapa</div>
-    <div style="font-size:.58rem;letter-spacing:.15em;color:var(--muted);margin-bottom:14px;line-height:1.7;">El contador general de días <span style="color:var(--verde)">NO se resetea</span>.<br>El contador de días en etapa sí vuelve a 0.</div>
+    <div style="font-size:.58rem;letter-spacing:.15em;color:var(--muted);margin-bottom:14px;line-height:1.7;">El contador general <span style="color:var(--verde)">NO se resetea</span>. El de etapa sí vuelve a 0.</div>
     <div class="fg"><label>Nueva etapa</label>
       <select id="et-etapa">
         <option value="Vegetativa">🌿 Vegetativa</option>
@@ -297,15 +319,9 @@
       <div id="ab-ts" style="font-size:.72rem;color:var(--verde2);letter-spacing:.05em;">—</div>
       <button class="btn-ok" id="ab-dl-btn" style="width:100%;margin-top:10px;background:#1a3a1a;color:var(--verde);border:1px solid var(--verde2);" onclick="descargarAutoBackup()">⬇ DESCARGAR AUTO-BACKUP</button>
     </div>
-    <p class="backup-info">
-      <b>EXPORTAR</b> — descarga un archivo <b>.json</b> con todos tus sistemas.<br>
-      <b>IMPORTAR</b> — seleccioná ese archivo para restaurar los datos.
-    </p>
+    <p class="backup-info"><b>EXPORTAR</b> — descarga un archivo <b>.json</b>.<br><b>IMPORTAR</b> — restaura desde ese archivo.</p>
     <button class="btn-ok" style="width:100%;margin-bottom:16px" onclick="exportar()">⬇ EXPORTAR JSON</button>
-    <div class="fg">
-      <label>Importar archivo JSON</label>
-      <input type="file" id="bk-file" accept=".json">
-    </div>
+    <div class="fg"><label>Importar archivo JSON</label><input type="file" id="bk-file" accept=".json"></div>
     <div class="fg" style="border-top:1px solid #1e3a1e;padding-top:14px;margin-top:4px;">
       <label style="color:#8888ff">🔐 Seguridad</label>
       <button class="btn-ok" style="width:100%;background:#6666cc;border:none;margin-top:8px;" onclick="cerrar('ov-b');abrirCambiarPIN()">🔑 CAMBIAR PIN</button>
@@ -323,8 +339,7 @@
     <div class="pin-modal-title">🔐 CAMBIAR PIN</div>
     <div class="pin-cstep active" id="pcs-a">
       <div class="pin-cstep-label">Verificá tu PIN actual</div>
-      <div class="mini-dots" id="mda"></div>
-      <div class="pin-err" id="err-a"></div>
+      <div class="mini-dots" id="mda"></div><div class="pin-err" id="err-a"></div>
       <div class="mini-pin-pad">
         <button class="mini-pin-btn" onclick="cpKey('a','1')">1</button><button class="mini-pin-btn" onclick="cpKey('a','2')">2</button><button class="mini-pin-btn" onclick="cpKey('a','3')">3</button>
         <button class="mini-pin-btn" onclick="cpKey('a','4')">4</button><button class="mini-pin-btn" onclick="cpKey('a','5')">5</button><button class="mini-pin-btn" onclick="cpKey('a','6')">6</button>
@@ -335,65 +350,47 @@
     </div>
     <div class="pin-cstep" id="pcs-b">
       <div class="pin-cstep-label">Nuevo PIN (3–6 dígitos)</div>
-      <div class="mini-dots" id="mdb"></div>
-      <div class="pin-err" id="err-b"></div>
+      <div class="mini-dots" id="mdb"></div><div class="pin-err" id="err-b"></div>
       <div class="mini-pin-pad">
         <button class="mini-pin-btn" onclick="cpKey('b','1')">1</button><button class="mini-pin-btn" onclick="cpKey('b','2')">2</button><button class="mini-pin-btn" onclick="cpKey('b','3')">3</button>
         <button class="mini-pin-btn" onclick="cpKey('b','4')">4</button><button class="mini-pin-btn" onclick="cpKey('b','5')">5</button><button class="mini-pin-btn" onclick="cpKey('b','6')">6</button>
         <button class="mini-pin-btn" onclick="cpKey('b','7')">7</button><button class="mini-pin-btn" onclick="cpKey('b','8')">8</button><button class="mini-pin-btn" onclick="cpKey('b','9')">9</button>
         <div class="mini-pin-btn empty"></div><button class="mini-pin-btn" onclick="cpKey('b','0')">0</button><button class="mini-pin-btn del" onclick="cpDel('b')">⌫</button>
       </div>
-      <div class="modal-btns">
-        <button class="btn-cancel" onclick="cpGo('a')">← ATRÁS</button>
-        <button class="btn-ok-pin" onclick="cpNext()">SIGUIENTE →</button>
-      </div>
+      <div class="modal-btns"><button class="btn-cancel" onclick="cpGo('a')">← ATRÁS</button><button class="btn-ok-pin" onclick="cpNext()">SIGUIENTE →</button></div>
     </div>
     <div class="pin-cstep" id="pcs-c">
       <div class="pin-cstep-label">Repetí el nuevo PIN</div>
-      <div class="mini-dots" id="mdc"></div>
-      <div class="pin-err" id="err-c"></div>
+      <div class="mini-dots" id="mdc"></div><div class="pin-err" id="err-c"></div>
       <div class="mini-pin-pad">
         <button class="mini-pin-btn" onclick="cpKey('c','1')">1</button><button class="mini-pin-btn" onclick="cpKey('c','2')">2</button><button class="mini-pin-btn" onclick="cpKey('c','3')">3</button>
         <button class="mini-pin-btn" onclick="cpKey('c','4')">4</button><button class="mini-pin-btn" onclick="cpKey('c','5')">5</button><button class="mini-pin-btn" onclick="cpKey('c','6')">6</button>
         <button class="mini-pin-btn" onclick="cpKey('c','7')">7</button><button class="mini-pin-btn" onclick="cpKey('c','8')">8</button><button class="mini-pin-btn" onclick="cpKey('c','9')">9</button>
         <div class="mini-pin-btn empty"></div><button class="mini-pin-btn" onclick="cpKey('c','0')">0</button><button class="mini-pin-btn del" onclick="cpDel('c')">⌫</button>
       </div>
-      <div class="modal-btns">
-        <button class="btn-cancel" onclick="cpGo('b')">← ATRÁS</button>
-        <button class="btn-ok-pin" onclick="cpGuardar()">✓ GUARDAR</button>
-      </div>
+      <div class="modal-btns"><button class="btn-cancel" onclick="cpGo('b')">← ATRÁS</button><button class="btn-ok-pin" onclick="cpGuardar()">✓ GUARDAR</button></div>
     </div>
   </div>
 </div>
 
 <script>
-const KEY='recambio_v5', KEY_PIN='recambio_pin', KEY_PH='recambio_ph', KEY_AB='recambio_autobackup', KEY_LAV='recambio_lavados';
+const KEY='recambio_v5',KEY_PIN='recambio_pin',KEY_PH='recambio_ph',KEY_AB='recambio_autobackup',KEY_LAV='recambio_lavados',KEY_HIST='recambio_historial';
 const DEFAULT_PIN='779';
 const EMOJIS={Vegetativa:'🌿',Flora:'🌸',Vejez:'🍂','Germinación':'🌱'};
-let SS=[], editId=null, openIds=new Set();
-let LAVS=[];
-let PH=null;
-let lavEditId=null; // sistemaId activo en modal lavado
+let SS=[],editId=null,openIds=new Set(),LAVS=[],PH=null,HIST=[],lavEditId=null,etapaId=null,histOpen=false;
 
 function load(){
   try{SS=JSON.parse(localStorage.getItem(KEY))||[];}catch{SS=[];}
   try{PH=JSON.parse(localStorage.getItem(KEY_PH))||null;}catch{PH=null;}
   try{LAVS=JSON.parse(localStorage.getItem(KEY_LAV))||[];}catch{LAVS=[];}
+  try{HIST=JSON.parse(localStorage.getItem(KEY_HIST))||[];}catch{HIST=[];}
 }
-function save(){
-  localStorage.setItem(KEY,JSON.stringify(SS));
-  if(SS.length>0||PH){autoBackup();}
-}
-function savePH(){
-  localStorage.setItem(KEY_PH,JSON.stringify(PH));
-  if(SS.length>0||PH){autoBackup();}
-}
-function saveLAV(){
-  localStorage.setItem(KEY_LAV,JSON.stringify(LAVS));
-  autoBackup();
-}
+function save(){localStorage.setItem(KEY,JSON.stringify(SS));autoBackup();}
+function savePH(){localStorage.setItem(KEY_PH,JSON.stringify(PH));autoBackup();}
+function saveLAV(){localStorage.setItem(KEY_LAV,JSON.stringify(LAVS));autoBackup();}
+function saveHIST(){localStorage.setItem(KEY_HIST,JSON.stringify(HIST));autoBackup();}
 function autoBackup(){
-  const snap={ss:SS,ph:PH,lavs:LAVS,ts:new Date().toISOString()};
+  const snap={ss:SS,ph:PH,lavs:LAVS,hist:HIST,ts:new Date().toISOString()};
   localStorage.setItem(KEY_AB,JSON.stringify(snap));
 }
 function getAutoBackup(){try{return JSON.parse(localStorage.getItem(KEY_AB))||null;}catch{return null;}}
@@ -401,13 +398,9 @@ function fmtTS(iso){if(!iso)return'—';const d=new Date(iso);const pad=n=>Strin
 function descargarAutoBackup(){
   const ab=getAutoBackup();
   if(!ab){alert('Sin auto-backup todavía.');return;}
-  if((!ab.ss||ab.ss.length===0)&&!ab.ph){
-    if(!confirm('⚠️ El auto-backup está vacío. ¿Descargarlo igual?'))return;
-  }
-  const blob=new Blob([JSON.stringify({ss:ab.ss,ph:ab.ph,lavs:ab.lavs||[]},null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  const fecha=ab.ts?ab.ts.slice(0,10).replaceAll('-',''):'';
-  a.href=url;a.download='recambio_hidro_backup_'+fecha+'.json';
+  const blob=new Blob([JSON.stringify({ss:ab.ss,ph:ab.ph,lavs:ab.lavs||[],hist:ab.hist||[]},null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='recambio_backup_'+(ab.ts?ab.ts.slice(0,10).replaceAll('-',''):'')+'.json';
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 function hoy(){return new Date().toISOString().split('T')[0];}
@@ -422,100 +415,34 @@ function setPin(p){localStorage.setItem(KEY_PIN,p);}
 
 /* ── PIN LOCK ── */
 let lockInput='';
-function buildLockDots(){
-  const cont=document.getElementById('lock-dots');
-  cont.innerHTML='';
-  for(let i=0;i<getPin().length;i++){
-    const d=document.createElement('div');d.className='pin-dot';cont.appendChild(d);
-  }
-}
-function renderLockDots(){
-  [...document.getElementById('lock-dots').children].forEach((d,i)=>{
-    d.classList.toggle('filled',i<lockInput.length);d.classList.remove('error');
-  });
-}
-function lockKey(digit){
-  const pin=getPin();
-  if(lockInput.length>=pin.length)return;
-  lockInput+=digit;renderLockDots();
-  if(lockInput.length===pin.length){
-    if(lockInput===pin)setTimeout(unlockApp,120);
-    else lockFail();
-  }
-}
+function buildLockDots(){const c=document.getElementById('lock-dots');c.innerHTML='';for(let i=0;i<getPin().length;i++){const d=document.createElement('div');d.className='pin-dot';c.appendChild(d);}}
+function renderLockDots(){[...document.getElementById('lock-dots').children].forEach((d,i)=>{d.classList.toggle('filled',i<lockInput.length);d.classList.remove('error');});}
+function lockKey(digit){const pin=getPin();if(lockInput.length>=pin.length)return;lockInput+=digit;renderLockDots();if(lockInput.length===pin.length){if(lockInput===pin)setTimeout(unlockApp,120);else lockFail();}}
 function lockDel(){lockInput=lockInput.slice(0,-1);renderLockDots();document.getElementById('lock-err').textContent='';}
-function lockFail(){
-  const cont=document.getElementById('lock-dots');
-  [...cont.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});
-  document.getElementById('lock-err').textContent='PIN incorrecto';
-  cont.classList.add('shake');
-  setTimeout(()=>{cont.classList.remove('shake');[...cont.children].forEach(d=>d.classList.remove('error'));lockInput='';document.getElementById('lock-err').textContent='';renderLockDots();},650);
-}
+function lockFail(){const c=document.getElementById('lock-dots');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});document.getElementById('lock-err').textContent='PIN incorrecto';c.classList.add('shake');setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));lockInput='';document.getElementById('lock-err').textContent='';renderLockDots();},650);}
 function unlockApp(){document.getElementById('pin-screen').classList.remove('visible');document.getElementById('app').style.display='block';lockInput='';}
 
 /* ── CAMBIAR PIN ── */
 let cpA='',cpB='',cpC='';
-function abrirCambiarPIN(){
-  cpA='';cpB='';cpC='';
-  ['a','b','c'].forEach(x=>{document.getElementById('err-'+x).textContent='';});
-  cpGo('a');renderMD('a');renderMD('b');renderMD('c');
-  document.getElementById('ov-pin').classList.add('open');
-}
-function cpGo(s){
-  ['a','b','c'].forEach(x=>document.getElementById('pcs-'+x).className='pin-cstep'+(x===s?' active':''));
-}
-function renderMD(s){
-  const val=s==='a'?cpA:s==='b'?cpB:cpC;
-  const pin=getPin();
-  const total=s==='a'?pin.length:Math.max(val.length,3);
-  const cont=document.getElementById('md'+s);
-  cont.innerHTML='';
-  for(let i=0;i<total;i++){const d=document.createElement('div');d.className='mini-dot'+(i<val.length?' filled':'');cont.appendChild(d);}
-}
-function cpKey(s,digit){
-  const pin=getPin();
-  if(s==='a'){if(cpA.length>=pin.length)return;cpA+=digit;renderMD('a');if(cpA.length===pin.length){if(cpA===pin){document.getElementById('err-a').textContent='';setTimeout(()=>{cpB='';renderMD('b');cpGo('b');},150);}else{document.getElementById('err-a').textContent='PIN incorrecto';const c=document.getElementById('mda');c.classList.add('shake');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));cpA='';renderMD('a');},650);}}}
-  if(s==='b'){if(cpB.length>=6)return;cpB+=digit;renderMD('b');}
-  if(s==='c'){if(cpC.length>=6)return;cpC+=digit;renderMD('c');}
-}
-function cpDel(s){
-  if(s==='a'){cpA=cpA.slice(0,-1);renderMD('a');document.getElementById('err-a').textContent='';}
-  if(s==='b'){cpB=cpB.slice(0,-1);renderMD('b');document.getElementById('err-b').textContent='';}
-  if(s==='c'){cpC=cpC.slice(0,-1);renderMD('c');document.getElementById('err-c').textContent='';}
-}
-function cpNext(){
-  if(cpB.length<3){document.getElementById('err-b').textContent='Mínimo 3 dígitos';return;}
-  document.getElementById('err-b').textContent='';cpC='';renderMD('c');cpGo('c');
-}
-function cpGuardar(){
-  if(cpC.length<3){document.getElementById('err-c').textContent='Mínimo 3 dígitos';return;}
-  if(cpC!==cpB){
-    document.getElementById('err-c').textContent='Los PINs no coinciden';
-    const c=document.getElementById('mdc');c.classList.add('shake');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});
-    setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));cpC='';renderMD('c');},650);
-    return;
-  }
-  setPin(cpB);buildLockDots();renderLockDots();cerrar('ov-pin');alert('✅ PIN actualizado correctamente.');
-}
+function abrirCambiarPIN(){cpA='';cpB='';cpC='';['a','b','c'].forEach(x=>document.getElementById('err-'+x).textContent='');cpGo('a');renderMD('a');renderMD('b');renderMD('c');document.getElementById('ov-pin').classList.add('open');}
+function cpGo(s){['a','b','c'].forEach(x=>document.getElementById('pcs-'+x).className='pin-cstep'+(x===s?' active':''));}
+function renderMD(s){const val=s==='a'?cpA:s==='b'?cpB:cpC;const pin=getPin();const total=s==='a'?pin.length:Math.max(val.length,3);const c=document.getElementById('md'+s);c.innerHTML='';for(let i=0;i<total;i++){const d=document.createElement('div');d.className='mini-dot'+(i<val.length?' filled':'');c.appendChild(d);}}
+function cpKey(s,digit){const pin=getPin();if(s==='a'){if(cpA.length>=pin.length)return;cpA+=digit;renderMD('a');if(cpA.length===pin.length){if(cpA===pin){document.getElementById('err-a').textContent='';setTimeout(()=>{cpB='';renderMD('b');cpGo('b');},150);}else{document.getElementById('err-a').textContent='PIN incorrecto';const c=document.getElementById('mda');c.classList.add('shake');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));cpA='';renderMD('a');},650);}}}if(s==='b'){if(cpB.length>=6)return;cpB+=digit;renderMD('b');}if(s==='c'){if(cpC.length>=6)return;cpC+=digit;renderMD('c');}}
+function cpDel(s){if(s==='a'){cpA=cpA.slice(0,-1);renderMD('a');document.getElementById('err-a').textContent='';}if(s==='b'){cpB=cpB.slice(0,-1);renderMD('b');document.getElementById('err-b').textContent='';}if(s==='c'){cpC=cpC.slice(0,-1);renderMD('c');document.getElementById('err-c').textContent='';}}
+function cpNext(){if(cpB.length<3){document.getElementById('err-b').textContent='Mínimo 3 dígitos';return;}document.getElementById('err-b').textContent='';cpC='';renderMD('c');cpGo('c');}
+function cpGuardar(){if(cpC.length<3){document.getElementById('err-c').textContent='Mínimo 3 dígitos';return;}if(cpC!==cpB){document.getElementById('err-c').textContent='Los PINs no coinciden';const c=document.getElementById('mdc');c.classList.add('shake');[...c.children].forEach(d=>{d.classList.add('error');d.classList.remove('filled');});setTimeout(()=>{c.classList.remove('shake');[...c.children].forEach(d=>d.classList.remove('error'));cpC='';renderMD('c');},650);return;}setPin(cpB);buildLockDots();renderLockDots();cerrar('ov-pin');alert('✅ PIN actualizado correctamente.');}
 
 /* ── pH ── */
-function abrirPH(){
-  document.getElementById('ph-fecha').value=PH?PH.fecha:hoy();
-  document.getElementById('ph-dias').value=PH?PH.dias:'';
-  document.getElementById('ov-ph').classList.add('open');
-}
-function guardarPH(){
-  const fecha=document.getElementById('ph-fecha').value;
-  const dias=parseInt(document.getElementById('ph-dias').value);
-  if(!fecha||!dias||dias<1){alert('Completá los dos campos.');return;}
-  PH={fecha,dias};savePH();cerrar('ov-ph');render();
-}
+function abrirPH(){document.getElementById('ph-fecha').value=PH?PH.fecha:hoy();document.getElementById('ph-dias').value=PH?PH.dias:'';document.getElementById('ov-ph').classList.add('open');}
+function guardarPH(){const fecha=document.getElementById('ph-fecha').value,dias=parseInt(document.getElementById('ph-dias').value);if(!fecha||!dias||dias<1){alert('Completá los dos campos.');return;}PH={fecha,dias};savePH();cerrar('ov-ph');render();}
 
-/* ── SISTEMA MODAL ── */
+/* ── SISTEMA ── */
 function abrirModal(id=null){
   editId=id;const s=id?SS.find(x=>x.id===id):null;
   document.getElementById('m-title').textContent=id?'Editar Sistema':'Nuevo Sistema';
   document.getElementById('m-nombre').value=s?s.nombre:'';
+  document.getElementById('m-semilla').value=s?s.semilla||'':'';
+  document.getElementById('m-desc').value=s?s.desc||'':'';
   document.getElementById('m-etapa').value=s?s.etapa:'Flora';
   const diasTotal=s?(s.fechaInicio?dif(s.fechaInicio,hoy()):dif(s.fecha,hoy())):0;
   const diasEtapa=s?(s.fechaEtapa?dif(s.fechaEtapa,hoy()):dif(s.fecha,hoy())):0;
@@ -527,25 +454,14 @@ function abrirModal(id=null){
   document.getElementById('ov-s').classList.add('open');
 }
 function previewFecha(tipo){
-  if(tipo==='total'){
-    const v=parseInt(document.getElementById('m-dias-total').value);
-    const el=document.getElementById('m-finicio-preview');
-    if(!isNaN(v)&&v>=0){const f=restar(hoy(),v);el.textContent='→ inicio '+fmtF(f);}else el.textContent='';
-  } else {
-    const v=parseInt(document.getElementById('m-dias-etapa').value);
-    const el=document.getElementById('m-fetapa-preview');
-    if(!isNaN(v)&&v>=0){const f=restar(hoy(),v);el.textContent='→ inicio '+fmtF(f);}else el.textContent='';
-  }
+  if(tipo==='total'){const v=parseInt(document.getElementById('m-dias-total').value);const el=document.getElementById('m-finicio-preview');if(!isNaN(v)&&v>=0){el.textContent='→ inicio '+fmtF(restar(hoy(),v));}else el.textContent='';}
+  else{const v=parseInt(document.getElementById('m-dias-etapa').value);const el=document.getElementById('m-fetapa-preview');if(!isNaN(v)&&v>=0){el.textContent='→ inicio '+fmtF(restar(hoy(),v));}else el.textContent='';}
 }
-function abrirBackup(){
-  const ab=getAutoBackup();
-  document.getElementById('ab-ts').textContent=ab?'Último: '+fmtTS(ab.ts):'Sin datos aún — guardá algo primero';
-  document.getElementById('ab-dl-btn').disabled=!ab;
-  document.getElementById('ov-b').classList.add('open');
-}
-function cerrar(id){document.getElementById(id).classList.remove('open');if(id!=='ov-lav')editId=null;}
+function cerrar(id){document.getElementById(id).classList.remove('open');if(id!=='ov-lav'&&id!=='ov-corte')editId=null;}
 function guardar(){
   const nombre=document.getElementById('m-nombre').value.trim();
+  const semilla=document.getElementById('m-semilla').value.trim();
+  const desc=document.getElementById('m-desc').value.trim();
   const etapa=document.getElementById('m-etapa').value;
   const diasTotalVal=document.getElementById('m-dias-total').value;
   const diasEtapaVal=document.getElementById('m-dias-etapa').value;
@@ -554,19 +470,15 @@ function guardar(){
   if(!nombre||!fecha||!dias||dias<1){alert('Completá todos los campos.');return;}
   const fechaInicio=diasTotalVal!==''?restar(hoy(),parseInt(diasTotalVal)):fecha;
   const fechaEtapa=diasEtapaVal!==''?restar(hoy(),parseInt(diasEtapaVal)):fecha;
-  if(editId){const i=SS.findIndex(x=>x.id===editId);if(i!==-1)SS[i]={...SS[i],nombre,etapa,fecha,dias,fechaInicio,fechaEtapa};}
-  else SS.push({id:uid(),nombre,etapa,fecha,dias,fechaInicio,fechaEtapa});
+  if(editId){const i=SS.findIndex(x=>x.id===editId);if(i!==-1)SS[i]={...SS[i],nombre,semilla,desc,etapa,fecha,dias,fechaInicio,fechaEtapa};}
+  else SS.push({id:uid(),nombre,semilla,desc,etapa,fecha,dias,fechaInicio,fechaEtapa});
   save();cerrar('ov-s');render();
 }
-function eliminar(id,e){e.stopPropagation();if(!confirm('¿Eliminás este sistema?'))return;SS=SS.filter(x=>x.id!==id);LAVS=LAVS.filter(l=>l.sistemaId!==id);openIds.delete(id);save();saveLAV();render();}
+function eliminar(id,e){e.stopPropagation();if(!confirm('¿Eliminás este sistema permanentemente?'))return;SS=SS.filter(x=>x.id!==id);LAVS=LAVS.filter(l=>l.sistemaId!==id);openIds.delete(id);save();saveLAV();render();}
 function recambioHoy(id,e){e.stopPropagation();const i=SS.findIndex(x=>x.id===id);if(i!==-1){SS[i].fecha=hoy();save();render();}}
 function editarCard(id,e){e.stopPropagation();abrirModal(id);}
-let etapaId=null;
 function abrirCambiarEtapa(id,e){
-  e.stopPropagation();
-  etapaId=id;
-  const s=SS.find(x=>x.id===id);
-  if(!s)return;
+  e.stopPropagation();etapaId=id;const s=SS.find(x=>x.id===id);if(!s)return;
   document.getElementById('et-title').textContent='⇄ Cambiar etapa · '+s.nombre;
   document.getElementById('et-etapa').value=s.etapa;
   document.getElementById('et-fecha').value=hoy();
@@ -574,23 +486,65 @@ function abrirCambiarEtapa(id,e){
 }
 function confirmarEtapa(){
   if(!etapaId)return;
-  const nuevaEtapa=document.getElementById('et-etapa').value;
-  const fechaEtapa=document.getElementById('et-fecha').value;
-  if(!fechaEtapa){alert('Indicá la fecha de inicio de la nueva etapa.');return;}
+  const nuevaEtapa=document.getElementById('et-etapa').value,fechaEtapa=document.getElementById('et-fecha').value;
+  if(!fechaEtapa){alert('Indicá la fecha.');return;}
   const i=SS.findIndex(x=>x.id===etapaId);
-  if(i!==-1){
-    SS[i]={...SS[i],etapa:nuevaEtapa,fechaEtapa};
-    save();cerrar('ov-etapa');render();
-    etapaId=null;
-  }
+  if(i!==-1){SS[i]={...SS[i],etapa:nuevaEtapa,fechaEtapa};save();cerrar('ov-etapa');render();etapaId=null;}
 }
 function calibreHoy(e){e.stopPropagation();if(PH){PH.fecha=hoy();savePH();render();}}
 function editarPH(e){e.stopPropagation();abrirPH();}
 
-/* ── LAVADO DE RAÍZ ── */
-function abrirLavadoModal(sid,e){
+/* ── CORTE ── */
+function abrirCorte(id,e){
   e.stopPropagation();
-  lavEditId=sid;
+  const s=SS.find(x=>x.id===id);if(!s)return;
+  document.getElementById('corte-sid').value=id;
+  document.getElementById('corte-fecha').value=hoy();
+  document.getElementById('corte-notas').value='';
+  const dGeneral=dif(s.fechaInicio||s.fecha,hoy());
+  const dEtapa=dif(s.fechaEtapa||s.fecha,hoy());
+  document.getElementById('corte-info').innerHTML=
+    `<b style="color:var(--corte);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;">${s.nombre}</b><br>`+
+    (s.semilla?`🌱 ${s.semilla}<br>`:'')+
+    (s.desc?`${s.desc}<br>`:'')+
+    `${EMOJIS[s.etapa]||''} ${s.etapa} · D${dGeneral} total · D${dEtapa} en etapa`;
+  document.getElementById('ov-corte').classList.add('open');
+}
+function confirmarCorte(){
+  const id=document.getElementById('corte-sid').value;
+  const fecha=document.getElementById('corte-fecha').value;
+  const notas=document.getElementById('corte-notas').value.trim();
+  if(!id||!fecha){alert('Falta la fecha.');return;}
+  const s=SS.find(x=>x.id===id);if(!s)return;
+  const lav=LAVS.find(l=>l.sistemaId===id);
+  const dGeneral=dif(s.fechaInicio||s.fecha,hoy());
+  const dEtapa=dif(s.fechaEtapa||s.fecha,hoy());
+  const entrada={
+    id:uid(),fecha,
+    nombre:s.nombre,semilla:s.semilla||'',desc:s.desc||'',
+    etapa:s.etapa,dGeneral,dEtapa,
+    fechaInicio:s.fechaInicio||s.fecha,
+    notas,
+    lavNotas:lav?lav.notas||'':'',
+  };
+  HIST.unshift(entrada);
+  SS=SS.filter(x=>x.id!==id);
+  LAVS=LAVS.filter(l=>l.sistemaId!==id);
+  openIds.delete(id);
+  saveHIST();save();saveLAV();
+  cerrar('ov-corte');render();
+}
+function eliminarHistorial(hid,e){
+  e.stopPropagation();
+  if(!confirm('¿Eliminás este registro del historial?'))return;
+  HIST=HIST.filter(h=>h.id!==hid);
+  saveHIST();renderHistorial();
+}
+function toggleHistorial(){histOpen=!histOpen;renderHistorial();}
+
+/* ── LAVADO ── */
+function abrirLavadoModal(sid,e){
+  e.stopPropagation();lavEditId=sid;
   document.getElementById('lav-sid').value=sid;
   const lav=LAVS.find(l=>l.sistemaId===sid);
   document.getElementById('lav-fecha').value=lav?lav.fecha:hoy();
@@ -607,47 +561,40 @@ function guardarLavado(){
   if(!fecha||!dias||dias<1){alert('Completá fecha y días.');return;}
   const idx=LAVS.findIndex(l=>l.sistemaId===sid);
   const rec={sistemaId:sid,fecha,dias,notas};
-  if(idx!==-1) LAVS[idx]=rec; else LAVS.push(rec);
-  forzarAbierta(sid);
-  saveLAV();cerrar('ov-lav');render();
+  if(idx!==-1)LAVS[idx]=rec;else LAVS.push(rec);
+  forzarAbierta(sid);saveLAV();cerrar('ov-lav');render();
 }
 function forzarAbierta(sid){
-  // Las cards urgentes (r<=1) abren por defecto; se "cierran" con 'closed_'+id
-  // Las cards normales abren con el id en openIds
-  const s=SS.find(x=>x.id===sid);
-  if(!s) return;
-  const r=rest(s);
-  if(r<=1){
-    // urgente: eliminar el cierre forzado si existe
-    openIds.delete('closed_'+sid);
-  } else {
-    // normal: agregar el id para que quede abierta
-    openIds.add(sid);
-  }
+  const s=SS.find(x=>x.id===sid);if(!s)return;
+  const lav=LAVS.find(l=>l.sistemaId===sid);
+  const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);
+  if(r<=1)openIds.delete('closed_'+sid);else openIds.add(sid);
 }
 function lavadoHoy(sid,e){
   if(e){e.stopPropagation();e.preventDefault();}
   const lavIdx=LAVS.findIndex(l=>l.sistemaId===sid);
   const sisIdx=SS.findIndex(x=>x.id===sid);
-  if(lavIdx!==-1) LAVS[lavIdx].fecha=hoy();
-  if(sisIdx!==-1) SS[sisIdx].fecha=hoy();
-  forzarAbierta(sid);
-  saveLAV();
-  save();
-  render();
+  if(lavIdx!==-1)LAVS[lavIdx].fecha=hoy();
+  if(sisIdx!==-1)SS[sisIdx].fecha=hoy();
+  forzarAbierta(sid);saveLAV();save();render();
 }
 function eliminarLavado(sid,e){
   e.stopPropagation();
-  if(!confirm('¿Quitás el seguimiento de lavado de este sistema?'))return;
-  LAVS=LAVS.filter(l=>l.sistemaId!==sid);
-  saveLAV();render();
+  if(!confirm('¿Quitás el seguimiento de lavado?'))return;
+  LAVS=LAVS.filter(l=>l.sistemaId!==sid);saveLAV();render();
 }
 
 /* ── BACKUP ── */
+function abrirBackup(){
+  const ab=getAutoBackup();
+  document.getElementById('ab-ts').textContent=ab?'Último: '+fmtTS(ab.ts):'Sin datos aún';
+  document.getElementById('ab-dl-btn').disabled=!ab;
+  document.getElementById('ov-b').classList.add('open');
+}
 function exportar(){
-  const data={ss:SS,ph:PH,lavs:LAVS};
+  const data={ss:SS,ph:PH,lavs:LAVS,hist:HIST};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download='recambio_backup_'+hoy().replaceAll('-','')+'.json';
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
@@ -655,72 +602,64 @@ function importar(){
   const file=document.getElementById('bk-file').files[0];
   if(!file){alert('Seleccioná un archivo .json primero.');return;}
   const reader=new FileReader();
-  reader.onload=function(e){
+  reader.onload=function(ev){
     try{
-      const data=JSON.parse(e.target.result);
-      let nuevosSS=[], nuevoPH=null, nuevosLAVS=[];
-      if(Array.isArray(data)){
-        nuevosSS=data;
-      } else if(data && Array.isArray(data.ss)){
-        nuevosSS=data.ss;
-        if(data.ph && data.ph.fecha && data.ph.dias) nuevoPH=data.ph;
-        if(data.lavs && Array.isArray(data.lavs)) nuevosLAVS=data.lavs;
-      } else {
-        throw new Error('Formato no reconocido');
-      }
-      if(!confirm('¿Reemplazás todos los datos con el backup?\n\nSistemas: '+nuevosSS.length+(nuevoPH?'\npH: ✓':'')+(nuevosLAVS.length?'\nLavados: '+nuevosLAVS.length:'')))return;
-      SS=nuevosSS; PH=nuevoPH; LAVS=nuevosLAVS;
+      const data=JSON.parse(ev.target.result);
+      let nSS=[],nPH=null,nLAVS=[],nHIST=[];
+      if(Array.isArray(data))nSS=data;
+      else if(data&&Array.isArray(data.ss)){
+        nSS=data.ss;
+        if(data.ph&&data.ph.fecha&&data.ph.dias)nPH=data.ph;
+        if(data.lavs&&Array.isArray(data.lavs))nLAVS=data.lavs;
+        if(data.hist&&Array.isArray(data.hist))nHIST=data.hist;
+      }else throw new Error('Formato no reconocido');
+      if(!confirm('¿Reemplazás todos los datos?\n\nSistemas: '+nSS.length+(nPH?'\npH: ✓':'')+(nHIST.length?'\nHistorial: '+nHIST.length:'')))return;
+      SS=nSS;PH=nPH;LAVS=nLAVS;HIST=nHIST;
       localStorage.setItem(KEY,JSON.stringify(SS));
-      if(PH) localStorage.setItem(KEY_PH,JSON.stringify(PH));
+      if(PH)localStorage.setItem(KEY_PH,JSON.stringify(PH));
       localStorage.setItem(KEY_LAV,JSON.stringify(LAVS));
-      autoBackup(); cerrar('ov-b'); render();
-      alert('✅ Backup importado correctamente.\n'+nuevosSS.length+' sistemas cargados.');
-    }catch(err){
-      alert('❌ Archivo inválido. Asegurate de usar un backup generado por esta app.');
-    }
+      localStorage.setItem(KEY_HIST,JSON.stringify(HIST));
+      autoBackup();cerrar('ov-b');render();
+      alert('✅ Backup importado.\n'+nSS.length+' sistemas cargados.');
+    }catch{alert('❌ Archivo inválido.');}
   };
   reader.readAsText(file);
 }
 
-/* ── RENDER ── */
-function lavBlock(sid){
-  const lav=LAVS.find(l=>l.sistemaId===sid);
-  if(!lav){
-    return`<div class="lav-block">
-      <div class="lav-block-header">
-        <div class="lav-block-title">🪣 Lavado de raíz</div>
-        <button class="btn-sm lav-add" style="flex:0;padding:5px 10px;" onclick="abrirLavadoModal('${sid}',event)">+ Configurar</button>
+/* ── RENDER HISTORIAL ── */
+function renderHistorial(){
+  const btn=document.querySelector('.hist-toggle');
+  const list=document.getElementById('hist-list');
+  const cnt=document.getElementById('hist-count');
+  cnt.textContent=HIST.length?'('+HIST.length+')':'';
+  if(!HIST.length){list.classList.remove('open');btn.style.display='none';return;}
+  btn.style.display='block';
+  list.classList.toggle('open',histOpen);
+  if(!histOpen){list.innerHTML='';return;}
+  list.innerHTML=HIST.map(h=>`
+    <div class="hist-card">
+      <div class="hist-nombre">✂ ${h.nombre}</div>
+      ${h.semilla?`<div class="hist-semilla">🌱 ${h.semilla}</div>`:''}
+      ${h.desc?`<div class="hist-semilla" style="color:var(--muted)">${h.desc}</div>`:''}
+      <div class="hist-rows">
+        <div class="hist-row">Fecha de corte <span>${fmtF(h.fecha)}</span></div>
+        <div class="hist-row">Etapa al corte <span>${EMOJIS[h.etapa]||''} ${h.etapa}</span></div>
+        <div class="hist-row">Días totales <span>${h.dGeneral}</span></div>
+        <div class="hist-row">Días en etapa <span>${h.dEtapa}</span></div>
+        <div class="hist-row">Inicio cultivo <span>${fmtF(h.fechaInicio)}</span></div>
+        ${h.notas?`<div class="hist-row">Notas <span>${h.notas}</span></div>`:''}
+        ${h.lavNotas?`<div class="hist-row">Lavado <span>${h.lavNotas}</span></div>`:''}
       </div>
-    </div>`;
-  }
-  const r=dif(hoy(),sumar(lav.fecha,lav.dias));
-  const prox=sumar(lav.fecha,lav.dias);
-  const pct=Math.min(100,Math.max(0,(dif(lav.fecha,hoy())/lav.dias)*100));
-  const dc=r<=1?'danger':r<=2?'warn':'ok';
-  const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)+'d'):(r+'d');
-  return`<div class="lav-block">
-    <div class="lav-block-header">
-      <div class="lav-block-title">🪣 Lavado de raíz <span class="lav-badge ${dc}">${diasTxt}</span></div>
+      <button class="hist-del" onclick="eliminarHistorial('${h.id}',event)">✕ Eliminar registro</button>
     </div>
-    <div class="lav-info">
-      <div class="info-row">Último lavado <span>${fmtF(lav.fecha)}</span></div>
-      <div class="info-row">Próximo <span>${fmtF(prox)}</span></div>
-      <div class="info-row">Ciclo <span>${lav.dias} días</span></div>
-      ${lav.notas?`<div class="info-row">Notas <span>${lav.notas}</span></div>`:''}
-      <div class="prog-wrap"><div class="prog-bar lav" style="width:${pct}%"></div></div>
-    </div>
-    <div class="lav-acts">
-      <button class="btn-sm lav-primary" onclick="lavadoHoy('${sid}',event);return false;">✓ Lavé hoy</button>
-      <button class="btn-sm lav-add" onclick="abrirLavadoModal('${sid}',event);return false;">✎ Editar</button>
-      <button class="btn-sm red" onclick="eliminarLavado('${sid}',event);return false;">✕</button>
-    </div>
-  </div>`;
+  `).join('');
 }
 
+/* ── RENDER MAIN ── */
 function render(){
   const grid=document.getElementById('grid');
   const alerta=document.getElementById('alerta');
-  // Para sistemas con lavado, el urgente es el del lavado
+
   const urgentes=SS.filter(s=>{
     const lav=LAVS.find(l=>l.sistemaId===s.id);
     const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);
@@ -747,25 +686,19 @@ function render(){
 
   if(!SS.length&&!PH){
     grid.innerHTML='<div style="text-align:center;color:var(--muted);font-size:.7rem;letter-spacing:.2em;padding:32px 0">SIN SISTEMAS · AGREGÁ UNO</div>';
-    return;
+    renderHistorial();return;
   }
 
   const items=[];
-  SS.forEach(s=>{
-    const lav=LAVS.find(l=>l.sistemaId===s.id);
-    const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);
-    items.push({tipo:'sistema',data:s,r});
-  });
-  if(PH) items.push({tipo:'ph',data:PH,r:phRest});
+  SS.forEach(s=>{const lav=LAVS.find(l=>l.sistemaId===s.id);const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);items.push({tipo:'sistema',data:s,r});});
+  if(PH)items.push({tipo:'ph',data:PH,r:phRest});
   items.sort((a,b)=>a.r-b.r);
 
   grid.innerHTML=items.map(item=>{
     if(item.tipo==='ph'){
-      const r=item.r;
-      const isUrgente=r<=1;
+      const r=item.r,isUrgente=r<=1;
       const isOpen=isUrgente?!openIds.has('closed_ph'):openIds.has('ph');
-      const prox=sumar(PH.fecha,PH.dias);
-      const trans=dif(PH.fecha,hoy());
+      const prox=sumar(PH.fecha,PH.dias),trans=dif(PH.fecha,hoy());
       const pct=Math.min(100,Math.max(0,(trans/PH.dias)*100));
       const dc=r<=1?'danger':r<=2?'warn':'cyan';
       const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
@@ -776,8 +709,7 @@ function render(){
           <div class="card-head-left">
             <div class="dias-mini ${dc}">${diasMini}</div>
             <div><div class="card-nombre">🔬 CALIBRACIÓN pH</div><div class="card-etapa">Medidor Milwaukee</div></div>
-          </div>
-          <div class="chevron">▼</div>
+          </div><div class="chevron">▼</div>
         </div>
         <div class="card-body"><div class="card-body-inner">
           <div class="dias-big-wrap">
@@ -795,113 +727,102 @@ function render(){
           </div>
         </div></div>
       </div>`;
-    } else {
-      const s=item.data;
-      const lav=LAVS.find(l=>l.sistemaId===s.id);
-      const r=lav ? dif(hoy(),sumar(lav.fecha,lav.dias)) : item.r;
-      const isUrgente=r<=1;
-      const isOpen=isUrgente?!openIds.has('closed_'+s.id):openIds.has(s.id);
-      const prox=lav ? sumar(lav.fecha,lav.dias) : sumar(s.fecha,s.dias);
-      const fechaRef=lav ? lav.fecha : s.fecha;
-      const ciclo=lav ? lav.dias : s.dias;
-      const trans=dif(fechaRef,hoy());
-      const pct=Math.min(100,Math.max(0,(trans/ciclo)*100));
-      const dc=lav?(r<=1?'danger':r<=2?'warn':'cyan'):(r<=1?'danger':r<=2?'warn':'ok');
-      const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
-      const cardExtra=lav?' lav-card-mode':'';
-      const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)):String(r);
-      const diasMini=r<=0?(r===0?'HOY':'+'+Math.abs(r)+'d'):(r+'d');
-      const dGeneral=dif(s.fechaInicio||s.fecha,hoy());
-      const dEtapa=dif(s.fechaEtapa||s.fecha,hoy());
-
-      if(lav){
-        // Card modo lavado — título principal cyan, sin bloque separado
-        const nombreColor=r<=1?'#fff':r<=2?'var(--warn)':'var(--cyan)';
-        return`<div class="card ${cardCls}${cardExtra}${isOpen?' open':''}" id="card-${s.id}">
-          <div class="card-head" onclick="toggleCard2('${s.id}',${isUrgente})">
-            <div class="card-head-left">
-              <div class="dias-mini ${dc}">${diasMini}</div>
-              <div style="flex:1;">
-                <div class="card-nombre" style="color:${nombreColor};">🪣 ${s.nombre}</div>
-                <div class="card-etapa" style="border-color:var(--cyan2);color:#008888;">LAVADO DE RAÍZ · ${EMOJIS[s.etapa]||''} ${s.etapa}</div>
-                <div style="display:flex;gap:6px;margin-top:5px;">
-                  <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
-                    <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">Total</span>
-                    <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--verde);line-height:1;">D${dGeneral}</span>
-                  </div>
-                  <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
-                    <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">${s.etapa==='Flora'?'Flora':s.etapa==='Vegetativa'?'Vege':s.etapa==='Germinación'?'Germ':'Vejez'}</span>
-                    <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:${s.etapa==='Flora'?'#ff88cc':s.etapa==='Vegetativa'?'#66ff99':s.etapa==='Germinación'?'#88ff88':'#ffcc88'};line-height:1;">D${dEtapa}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="chevron">▼</div>
-          </div>
-          <div class="card-body"><div class="card-body-inner" style="border-top-color:var(--cyan2);user-select:none;-webkit-user-select:none;">
-            <div class="dias-big-wrap">
-              <div class="dias-big ${dc}">${diasTxt}</div>
-              <div class="info">
-                <div class="info-row">Último lavado <span>${fmtF(fechaRef)}</span></div>
-                <div class="info-row">Próximo lavado <span>${fmtF(prox)}</span></div>
-                <div class="info-row">Ciclo <span>${ciclo} días</span></div>
-                ${lav.notas?`<div class="info-row">Notas <span style="color:var(--cyan)">${lav.notas}</span></div>`:''}
-                <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
-              </div>
-            </div>
-            <div class="card-acts">
-              <button class="btn-sm cyan-primary" onclick="lavadoHoy('${s.id}',event);return false;">✓ Lavé hoy</button>
-              <button class="btn-sm" onclick="abrirLavadoModal('${s.id}',event);return false;">✎ Lavado</button>
-              <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Sistema</button>
-              <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>
-            </div>
-          </div></div>
-        </div>`;
-      }
-
-      // Card modo recambio normal
-      return`<div class="card ${cardCls}${isOpen?' open':''}" id="card-${s.id}">
-        <div class="card-head" onclick="toggleCard2('${s.id}',${isUrgente})">
-          <div class="card-head-left">
-            <div class="dias-mini ${dc}">${diasMini}</div>
-            <div style="flex:1;">
-              <div class="card-nombre">${s.nombre}</div>
-              <div class="card-etapa">${EMOJIS[s.etapa]||''} ${s.etapa}</div>
-              <div style="display:flex;gap:6px;margin-top:5px;">
-                <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
-                  <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">Total</span>
-                  <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--verde);line-height:1;">D${dGeneral}</span>
-                </div>
-                <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
-                  <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">${s.etapa==='Flora'?'Flora':s.etapa==='Vegetativa'?'Vege':s.etapa==='Germinación'?'Germ':'Vejez'}</span>
-                  <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:${s.etapa==='Flora'?'#ff88cc':s.etapa==='Vegetativa'?'#66ff99':s.etapa==='Germinación'?'#88ff88':'#ffcc88'};line-height:1;">D${dEtapa}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="chevron">▼</div>
-        </div>
-        <div class="card-body"><div class="card-body-inner">
-          <div class="dias-big-wrap">
-            <div class="dias-big ${dc}">${diasTxt}</div>
-            <div class="info">
-              <div class="info-row">Último recambio <span>${fmtF(fechaRef)}</span></div>
-              <div class="info-row">Próximo recambio <span>${fmtF(prox)}</span></div>
-              <div class="info-row">Ciclo <span>${ciclo} días</span></div>
-              <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
-            </div>
-          </div>
-          <div class="card-acts">
-            <button class="btn-sm primary" onclick="recambioHoy('${s.id}',event)">✓ Recambié hoy</button>
-            <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Editar</button>
-            <button class="btn-sm" onclick="abrirCambiarEtapa('${s.id}',event)" style="border-color:#5a3a7a;color:#cc88ff;">⇄ Etapa</button>
-            <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>
-          </div>
-        </div></div>
-        ${lavBlock(s.id)}
-      </div>`;
     }
+
+    const s=item.data;
+    const lav=LAVS.find(l=>l.sistemaId===s.id);
+    const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):item.r;
+    const isUrgente=r<=1;
+    const isOpen=isUrgente?!openIds.has('closed_'+s.id):openIds.has(s.id);
+    const fechaRef=lav?lav.fecha:s.fecha;
+    const ciclo=lav?lav.dias:s.dias;
+    const prox=lav?sumar(lav.fecha,lav.dias):sumar(s.fecha,s.dias);
+    const trans=dif(fechaRef,hoy());
+    const pct=Math.min(100,Math.max(0,(trans/ciclo)*100));
+    const dc=lav?(r<=1?'danger':r<=2?'warn':'cyan'):(r<=1?'danger':r<=2?'warn':'ok');
+    const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
+    const cardExtra=lav?' lav-card-mode':'';
+    const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)):String(r);
+    const diasMini=r<=0?(r===0?'HOY':'+'+Math.abs(r)+'d'):(r+'d');
+    const dGeneral=dif(s.fechaInicio||s.fecha,hoy());
+    const dEtapa=dif(s.fechaEtapa||s.fecha,hoy());
+    const semillaHtml=s.semilla?`<div class="card-semilla">🌱 ${s.semilla}</div>`:'';
+    const descHtml=s.desc?`<div class="card-desc">${s.desc}</div>`:'';
+    const nombreColor=lav?(r<=1?'#fff':r<=2?'var(--warn)':'var(--cyan)'):'';
+    const etapaLabel=lav?`LAVADO DE RAÍZ · ${EMOJIS[s.etapa]||''} ${s.etapa}`:`${EMOJIS[s.etapa]||''} ${s.etapa}`;
+    const etapaStyle=lav?'border-color:var(--cyan2);color:#008888;':'';
+    const bodyStyle=lav?'border-top-color:var(--cyan2);user-select:none;-webkit-user-select:none;':'';
+
+    const diasBoxes=`<div style="display:flex;gap:6px;margin-top:5px;">
+      <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+        <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">Total</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--verde);line-height:1;">D${dGeneral}</span>
+      </div>
+      <div style="background:#0a1a0a;border:1px solid #1e3a1e;border-radius:6px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+        <span style="font-size:.42rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;">${s.etapa==='Flora'?'Flora':s.etapa==='Vegetativa'?'Vege':s.etapa==='Germinación'?'Germ':'Vejez'}</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:1rem;color:${s.etapa==='Flora'?'#ff88cc':s.etapa==='Vegetativa'?'#66ff99':s.etapa==='Germinación'?'#88ff88':'#ffcc88'};line-height:1;">D${dEtapa}</span>
+      </div>
+    </div>`;
+
+    const actsLav=`
+      <button class="btn-sm cyan-primary" onclick="lavadoHoy('${s.id}',event);return false;">✓ Lavé hoy</button>
+      <button class="btn-sm" onclick="abrirLavadoModal('${s.id}',event);return false;">✎ Lavado</button>
+      <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Sistema</button>
+      <button class="btn-sm" onclick="abrirCambiarEtapa('${s.id}',event)" style="border-color:#5a3a7a;color:#cc88ff;">⇄ Etapa</button>
+      <button class="btn-sm corte" onclick="abrirCorte('${s.id}',event)">✂ Corte</button>
+      <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>`;
+
+    const actsNormal=`
+      <button class="btn-sm primary" onclick="recambioHoy('${s.id}',event)">✓ Recambié hoy</button>
+      <button class="btn-sm" onclick="editarCard('${s.id}',event)">✎ Editar</button>
+      <button class="btn-sm" onclick="abrirCambiarEtapa('${s.id}',event)" style="border-color:#5a3a7a;color:#cc88ff;">⇄ Etapa</button>
+      <button class="btn-sm corte" onclick="abrirCorte('${s.id}',event)">✂ Corte</button>
+      <button class="btn-sm red" onclick="eliminar('${s.id}',event)">✕</button>`;
+
+    const infoRows=lav?`
+      <div class="info-row">Último lavado <span>${fmtF(fechaRef)}</span></div>
+      <div class="info-row">Próximo lavado <span>${fmtF(prox)}</span></div>
+      <div class="info-row">Ciclo <span>${ciclo} días</span></div>
+      ${lav.notas?`<div class="info-row">Notas <span style="color:var(--cyan)">${lav.notas}</span></div>`:''}`:`
+      <div class="info-row">Último recambio <span>${fmtF(fechaRef)}</span></div>
+      <div class="info-row">Próximo recambio <span>${fmtF(prox)}</span></div>
+      <div class="info-row">Ciclo <span>${ciclo} días</span></div>`;
+
+    const lavBlockHtml=!lav?`<div class="lav-block">
+      <div class="lav-block-header">
+        <div class="lav-block-title">🪣 Lavado de raíz</div>
+        <button class="btn-sm lav-add" style="flex:0;padding:5px 10px;" onclick="abrirLavadoModal('${s.id}',event)">+ Configurar</button>
+      </div>
+    </div>`:'';
+
+    return`<div class="card ${cardCls}${cardExtra}${isOpen?' open':''}" id="card-${s.id}">
+      <div class="card-head" onclick="toggleCard2('${s.id}',${isUrgente})">
+        <div class="card-head-left">
+          <div class="dias-mini ${dc}">${diasMini}</div>
+          <div style="flex:1;">
+            <div class="card-nombre" ${nombreColor?`style="color:${nombreColor};"`:''}>${lav?'🪣 ':''}${s.nombre}</div>
+            <div class="card-etapa" ${etapaStyle?`style="${etapaStyle}"`:''}>${etapaLabel}</div>
+            ${semillaHtml}${descHtml}
+            ${diasBoxes}
+          </div>
+        </div>
+        <div class="chevron">▼</div>
+      </div>
+      <div class="card-body"><div class="card-body-inner" ${bodyStyle?`style="${bodyStyle}"`:''}>
+        <div class="dias-big-wrap">
+          <div class="dias-big ${dc}">${diasTxt}</div>
+          <div class="info">
+            ${infoRows}
+            <div class="prog-wrap"><div class="prog-bar ${dc}" style="width:${pct}%"></div></div>
+          </div>
+        </div>
+        <div class="card-acts">${lav?actsLav:actsNormal}</div>
+      </div></div>
+      ${lavBlockHtml}
+    </div>`;
   }).join('');
+
+  renderHistorial();
 }
 
 function toggleCard2(id,isUrgente){
@@ -920,12 +841,8 @@ document.querySelectorAll('.overlay').forEach(ov=>{
 });
 
 function salirYBackup(){
-  if((!SS||SS.length===0)&&!PH){
-    alert('⚠️ No hay datos para guardar.');
-    return;
-  }
-  descargarAutoBackup();
-  setTimeout(()=>window.close(),400);
+  if((!SS||SS.length===0)&&!PH){alert('⚠️ No hay datos para guardar.');return;}
+  descargarAutoBackup();setTimeout(()=>window.close(),400);
 }
 
 load();
