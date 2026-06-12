@@ -206,6 +206,7 @@
   <div class="bottom">
     <button class="btn-dash" onclick="abrirModal()">+ AGREGAR SISTEMA</button>
     <button class="btn-ph-main" onclick="abrirPH()">🔬 pH</button>
+    <button class="btn-ph-main" style="border-color:#336677;color:#88ddff;" onclick="abrirSecado()">🌬 Secado</button>
     <button class="btn-back" onclick="abrirBackup()">💾</button>
   </div>
   <div style="max-width:480px;margin:12px auto 0;">
@@ -286,6 +287,20 @@
     <div class="modal-btns">
       <button class="btn-cancel" onclick="cerrar('ov-corte')">CANCELAR</button>
       <button class="btn-ok corte" onclick="confirmarCorte()">✂ CORTAR</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: SECADO -->
+<div class="overlay" id="ov-sec">
+  <div class="modal">
+    <div class="modal-title" style="color:#88ddff;">🌬 Nuevo Secado</div>
+    <div class="fg"><label>Nombre (Ej: White Widow, Lote 1…)</label><input type="text" id="sec-nombre" maxlength="40" placeholder="Ej: Auto OG Kush"></div>
+    <div class="fg"><label>Fecha de inicio del secado</label><input type="date" id="sec-fecha"></div>
+    <div class="fg"><label>Días de secado</label><input type="number" id="sec-dias" min="1" max="60" placeholder="Ej: 10"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="cerrar('ov-sec')">CANCELAR</button>
+      <button class="btn-ok" style="background:#88ddff;color:#0a0f0a;" onclick="guardarSecado()">GUARDAR</button>
     </div>
   </div>
 </div>
@@ -375,23 +390,25 @@
 </div>
 
 <script>
-const KEY='recambio_v5',KEY_PIN='recambio_pin',KEY_PH='recambio_ph',KEY_AB='recambio_autobackup',KEY_LAV='recambio_lavados',KEY_HIST='recambio_historial';
+const KEY='recambio_v5',KEY_PIN='recambio_pin',KEY_PH='recambio_ph',KEY_AB='recambio_autobackup',KEY_LAV='recambio_lavados',KEY_HIST='recambio_historial',KEY_SEC='recambio_secados';
 const DEFAULT_PIN='779';
 const EMOJIS={Vegetativa:'🌿',Flora:'🌸',Vejez:'🍂','Germinación':'🌱'};
-let SS=[],editId=null,openIds=new Set(),LAVS=[],PH=null,HIST=[],lavEditId=null,etapaId=null,histOpen=false;
+let SS=[],editId=null,openIds=new Set(),LAVS=[],PH=null,HIST=[],SECADOS=[],lavEditId=null,etapaId=null,histOpen=false;
 
 function load(){
   try{SS=JSON.parse(localStorage.getItem(KEY))||[];}catch{SS=[];}
   try{PH=JSON.parse(localStorage.getItem(KEY_PH))||null;}catch{PH=null;}
   try{LAVS=JSON.parse(localStorage.getItem(KEY_LAV))||[];}catch{LAVS=[];}
   try{HIST=JSON.parse(localStorage.getItem(KEY_HIST))||[];}catch{HIST=[];}
+  try{SECADOS=JSON.parse(localStorage.getItem(KEY_SEC))||[];}catch{SECADOS=[];}
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(SS));autoBackup();}
 function savePH(){localStorage.setItem(KEY_PH,JSON.stringify(PH));autoBackup();}
 function saveLAV(){localStorage.setItem(KEY_LAV,JSON.stringify(LAVS));autoBackup();}
 function saveHIST(){localStorage.setItem(KEY_HIST,JSON.stringify(HIST));autoBackup();}
+function saveSEC(){localStorage.setItem(KEY_SEC,JSON.stringify(SECADOS));autoBackup();}
 function autoBackup(){
-  const snap={ss:SS,ph:PH,lavs:LAVS,hist:HIST,ts:new Date().toISOString()};
+  const snap={ss:SS,ph:PH,lavs:LAVS,hist:HIST,secados:SECADOS,ts:new Date().toISOString()};
   localStorage.setItem(KEY_AB,JSON.stringify(snap));
 }
 function getAutoBackup(){try{return JSON.parse(localStorage.getItem(KEY_AB))||null;}catch{return null;}}
@@ -495,7 +512,27 @@ function confirmarEtapa(){
 function calibreHoy(e){e.stopPropagation();if(PH){PH.fecha=hoy();savePH();render();}}
 function editarPH(e){e.stopPropagation();abrirPH();}
 
-/* ── CORTE ── */
+/* ── SECADO ── */
+function abrirSecado(){
+  document.getElementById('sec-nombre').value='';
+  document.getElementById('sec-fecha').value=hoy();
+  document.getElementById('sec-dias').value='';
+  document.getElementById('ov-sec').classList.add('open');
+}
+function guardarSecado(){
+  const nombre=document.getElementById('sec-nombre').value.trim();
+  const fecha=document.getElementById('sec-fecha').value;
+  const dias=parseInt(document.getElementById('sec-dias').value);
+  if(!nombre||!fecha||!dias||dias<1){alert('Completá todos los campos.');return;}
+  SECADOS.push({id:uid(),nombre,fecha,dias});
+  saveSEC();cerrar('ov-sec');render();
+}
+function eliminarSecado(id,e){
+  e.stopPropagation();
+  if(!confirm('¿Eliminás este secado?'))return;
+  SECADOS=SECADOS.filter(s=>s.id!==id);
+  saveSEC();render();
+}
 function abrirCorte(id,e){
   e.stopPropagation();
   const s=SS.find(x=>x.id===id);if(!s)return;
@@ -709,9 +746,45 @@ function render(){
   const items=[];
   SS.forEach(s=>{const lav=LAVS.find(l=>l.sistemaId===s.id);const r=lav?dif(hoy(),sumar(lav.fecha,lav.dias)):rest(s);items.push({tipo:'sistema',data:s,r});});
   if(PH)items.push({tipo:'ph',data:PH,r:phRest});
+  SECADOS.forEach(s=>items.push({tipo:'secado',data:s,r:dif(hoy(),sumar(s.fecha,s.dias))}));
   items.sort((a,b)=>a.r-b.r);
 
   grid.innerHTML=items.map(item=>{
+    if(item.tipo==='secado'){
+      const s=item.data,r=item.r;
+      const dc=r<=1?'danger':r<=2?'warn':'sec';
+      const cardCls=r<=1?'danger-card':r<=2?'warn-card':'ok-card';
+      const diasTxt=r<=0?(r===0?'¡HOY!':'+'+Math.abs(r)):String(r);
+      const diasMini=r<=0?(r===0?'HOY':'+'+Math.abs(r)+'d'):(r+'d');
+      const prox=sumar(s.fecha,s.dias);
+      const trans=dif(s.fecha,hoy());
+      const pct=Math.min(100,Math.max(0,(trans/s.dias)*100));
+      const col=r<=1?'var(--danger)':r<=2?'var(--warn)':'#88ddff';
+      return`<div class="card ${cardCls}" style="border-color:${r<=1?'':'#336677'};">
+        <div class="card-head" style="cursor:default;">
+          <div class="card-head-left">
+            <div class="dias-mini" style="color:${col};">${diasMini}</div>
+            <div>
+              <div class="card-nombre" style="color:${col};">🌬 ${s.nombre}</div>
+              <div class="card-etapa" style="border-color:#336677;color:#557788;">SECADO</div>
+            </div>
+          </div>
+          <button class="btn-sm red" style="flex:0;padding:5px 10px;" onclick="eliminarSecado('${s.id}',event)">✕</button>
+        </div>
+        <div class="card-body open"><div class="card-body-inner" style="border-top-color:#336677;">
+          <div class="dias-big-wrap">
+            <div class="dias-big" style="color:${col};text-shadow:0 0 30px ${col}44;">${diasTxt}</div>
+            <div class="info">
+              <div class="info-row">Inicio secado <span>${fmtF(s.fecha)}</span></div>
+              <div class="info-row">Listo el <span>${fmtF(prox)}</span></div>
+              <div class="info-row">Duración <span>${s.dias} días</span></div>
+              <div class="prog-wrap"><div class="prog-bar" style="background:linear-gradient(90deg,#336677,#88ddff);width:${pct}%"></div></div>
+            </div>
+          </div>
+        </div></div>
+      </div>`;
+    }
+
     if(item.tipo==='ph'){
       const r=item.r,isUrgente=r<=1;
       const isOpen=isUrgente?!openIds.has('closed_ph'):openIds.has('ph');
